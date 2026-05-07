@@ -17,6 +17,9 @@ export enum GameStatus {
   Finished = 'finished',
 }
 
+/** String literal union for game status — matches GameStatus enum values. Used in GameState. */
+export type GameStatusStr = 'lobby' | 'playing' | 'reveal' | 'finished';
+
 // ---------------------------------------------------------------------------
 // Core data shapes
 // ---------------------------------------------------------------------------
@@ -43,7 +46,7 @@ export interface Player {
  */
 export interface GameState {
   id: string;
-  status: GameStatus;
+  status: GameStatusStr;
   players: Player[];
   currentRound: number;
   questions: Question[];
@@ -75,7 +78,7 @@ export type ServerMessage =
  * correctIndex is present only during reveal phase.
  */
 export interface GameStateSummary {
-  status: GameStatus;
+  status: GameStatusStr;
   currentRound: number;
   totalRounds: number;
   question: Question | null;

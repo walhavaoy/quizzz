@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 import { randomUUID } from 'crypto';
 import pino from 'pino';
-import type { GameState, GameStatus, Player, Question, GameStateSummary } from '../shared/types';
+import type { GameState, Player, Question, GameStateSummary } from '../shared/types';
 import questionsData from '../shared/questions.json';
 
 const logger = pino({ name: 'game-engine' });
@@ -200,10 +200,17 @@ export class GameEngine extends EventEmitter {
 
     player.disconnected = false;
 
-    const currentQuestion =
+    const rawQuestion =
       ag.state.status !== 'lobby' && ag.state.currentRound > 0
         ? this.safeQuestion(ag)
         : null;
+
+    // Strip correctIndex during playing phase to prevent reconnect-cheat
+    // (same pattern as advanceToNextRound). During reveal it's intentionally kept.
+    const currentQuestion =
+      rawQuestion && ag.state.status === 'playing'
+        ? { id: rawQuestion.id, text: rawQuestion.text, options: rawQuestion.options }
+        : rawQuestion;
 
     const summary: GameStateSummary = {
       status: ag.state.status,

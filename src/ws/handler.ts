@@ -131,7 +131,7 @@ function handleConnection(ws: WebSocket, req: IncomingMessage): void {
   const existingSocket = playerSockets.get(playerId);
   if (existingSocket && existingSocket !== ws) {
     logger.info({ gameId, playerId }, 'Replacing stale socket for player');
-    existingSocket.onclose = null; // suppress disconnect handling for the old socket
+    // connections.delete prevents the close handler from running disconnect logic for the old socket
     connections.delete(existingSocket);
     existingSocket.close(1001, 'Replaced by new connection');
   }
@@ -145,7 +145,8 @@ function handleConnection(ws: WebSocket, req: IncomingMessage): void {
     if (result.kind === 'reconnected') {
       logger.info({ gameId, playerId }, 'Player reconnected — sending state_sync');
       sendTo(ws, { type: 'state_sync', game: result.summary });
-      // Notify others that the player is back
+      // Reuse player_joined to notify others; clients already handle it by refreshing the player list.
+      // A dedicated player_reconnected type is out of scope — this is semantically equivalent here.
       broadcast(gameId, { type: 'player_joined', player, players: result.summary.players }, playerId);
     } else if (result.kind === 'game_over') {
       sendTo(ws, { type: 'game_over', players: game.players });
