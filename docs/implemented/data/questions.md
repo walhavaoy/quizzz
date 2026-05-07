@@ -1,7 +1,7 @@
 ---
 component: questions
 area: data
-coverage: 0%
+coverage: 100%
 created: 2026-05-07
 ---
 
@@ -9,7 +9,7 @@ created: 2026-05-07
 
 | Requirement | Status | Notes |
 |-------------|--------|-------|
-| REQ-QS-01   |        |       |
-| REQ-QS-02   |        |       |
-| REQ-QS-03   |        |       |
-| REQ-QS-04   |        |       |
+| REQ-QS-01   | done   | 20 questions at src/shared/questions.json |
+| REQ-QS-02   | done   | id, text, options[4], correctIndex (0-3) per question |
+| REQ-QS-03   | done   | General knowledge: science, history, geography, arts, nature |
+| REQ-QS-04   | done   | All correct answers verified accurate |

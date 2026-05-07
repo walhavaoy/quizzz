@@ -1,7 +1,7 @@
 ---
 component: game-engine
 area: backend
-coverage: 0%
+coverage: 50%
 created: 2026-05-07
 ---
 
@@ -9,13 +9,13 @@ created: 2026-05-07
 
 | Requirement | Status | Notes |
 |-------------|--------|-------|
-| REQ-GE-01   |        |       |
-| REQ-GE-02   |        |       |
-| REQ-GE-03   |        |       |
-| REQ-GE-04   |        |       |
-| REQ-GE-05   |        |       |
-| REQ-GE-06   |        |       |
-| REQ-GE-07   |        |       |
-| REQ-GE-08   |        |       |
-| REQ-GE-09   |        |       |
-| REQ-GE-10   |        |       |
+| REQ-GE-01   | done   | State machine skeleton: lobby/playing/reveal/finished |
+| REQ-GE-02   | done   | Player tracking: id, nickname, score, currentAnswer |
+| REQ-GE-03   | done   | 5 random questions selected from pool on createGame() |
+| REQ-GE-04   |        | 15-second countdown — requires WebSocket timer task |
+| REQ-GE-05   |        | Answer lock on timeout — requires WebSocket timer task |
+| REQ-GE-06   | done   | +10 for correct answer, +0 for wrong/timeout |
+| REQ-GE-07   |        | 5-second reveal phase — requires WebSocket timer task |
+| REQ-GE-08   |        | Final rankings — deferred (no finished state transition yet) |
+| REQ-GE-09   | done   | First joiner is host (hostId set on first player) |
+| REQ-GE-10   |        | Play Again reset — deferred to WebSocket task |
