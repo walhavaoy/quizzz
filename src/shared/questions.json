@@ -1,0 +1,127 @@
+[
+  {
+    "id": 1,
+    "text": "What is the capital of Australia?",
+    "options": ["Sydney", "Melbourne", "Canberra", "Brisbane"],
+    "correctIndex": 2
+  },
+  {
+    "id": 2,
+    "text": "Which element has the atomic number 79?",
+    "options": ["Silver", "Platinum", "Gold", "Copper"],
+    "correctIndex": 2
+  },
+  {
+    "id": 3,
+    "text": "In what year did World War II end?",
+    "options": ["1943", "1944", "1945", "1946"],
+    "correctIndex": 2
+  },
+  {
+    "id": 4,
+    "text": "Who painted the Sistine Chapel ceiling?",
+    "options": ["Leonardo da Vinci", "Raphael", "Donatello", "Michelangelo"],
+    "correctIndex": 3
+  },
+  {
+    "id": 5,
+    "text": "What is the largest planet in our solar system?",
+    "options": ["Saturn", "Jupiter", "Neptune", "Uranus"],
+    "correctIndex": 1
+  },
+  {
+    "id": 6,
+    "text": "Which programming language was created by Guido van Rossum?",
+    "options": ["Ruby", "Perl", "Python", "Java"],
+    "correctIndex": 2
+  },
+  {
+    "id": 7,
+    "text": "How many sides does a dodecagon have?",
+    "options": ["10", "11", "12", "14"],
+    "correctIndex": 2
+  },
+  {
+    "id": 8,
+    "text": "What is the chemical symbol for sodium?",
+    "options": ["So", "Sd", "Na", "Nm"],
+    "correctIndex": 2
+  },
+  {
+    "id": 9,
+    "text": "Which country invented champagne?",
+    "options": ["Italy", "Spain", "Germany", "France"],
+    "correctIndex": 3
+  },
+  {
+    "id": 10,
+    "text": "What is the longest river in the world?",
+    "options": ["Amazon", "Yangtze", "Mississippi", "Nile"],
+    "correctIndex": 3
+  },
+  {
+    "id": 11,
+    "text": "Which organ produces insulin?",
+    "options": ["Liver", "Kidney", "Pancreas", "Spleen"],
+    "correctIndex": 2
+  },
+  {
+    "id": 12,
+    "text": "Who wrote 'Pride and Prejudice'?",
+    "options": ["Charlotte Brontë", "Jane Austen", "George Eliot", "Mary Shelley"],
+    "correctIndex": 1
+  },
+  {
+    "id": 13,
+    "text": "What is the speed of light in a vacuum (km/s)?",
+    "options": ["200,000", "250,000", "300,000", "350,000"],
+    "correctIndex": 2
+  },
+  {
+    "id": 14,
+    "text": "In which city is the Sagrada Família located?",
+    "options": ["Madrid", "Lisbon", "Rome", "Barcelona"],
+    "correctIndex": 3
+  },
+  {
+    "id": 15,
+    "text": "What is the hardest natural substance on Earth?",
+    "options": ["Quartz", "Corundum", "Topaz", "Diamond"],
+    "correctIndex": 3
+  },
+  {
+    "id": 16,
+    "text": "Which planet is known as the Red Planet?",
+    "options": ["Venus", "Mars", "Jupiter", "Mercury"],
+    "correctIndex": 1
+  },
+  {
+    "id": 17,
+    "text": "What does 'HTTP' stand for?",
+    "options": [
+      "HyperText Transfer Protocol",
+      "High Transfer Text Protocol",
+      "HyperText Transmission Process",
+      "Hosted Transfer Text Protocol"
+    ],
+    "correctIndex": 0
+  },
+  {
+    "id": 18,
+    "text": "Which country has the most natural lakes?",
+    "options": ["Russia", "USA", "Canada", "Brazil"],
+    "correctIndex": 2
+  },
+  {
+    "id": 19,
+    "text": "How many bones are in the adult human body?",
+    "options": ["196", "206", "216", "226"],
+    "correctIndex": 1
+  },
+  {
+    "id": 20,
+    "text": "What is the smallest prime number?",
+    "options": ["0", "1", "2", "3"],
+    "correctIndex": 2
+  }
+]
