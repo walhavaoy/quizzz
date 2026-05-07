@@ -6,6 +6,8 @@ import pino from 'pino';
 import cors from 'cors';
 import pinoHttp from 'pino-http';
 import apiRouter from './routes/api';
+import { setupWsHandler } from './ws/handler';
+import { clearAllTimers } from './game/engine';
 
 const logger = pino({ name: 'quizzz' });
 
@@ -42,13 +44,8 @@ server.on('upgrade', (req, socket, head) => {
   });
 });
 
-// Stub handler — wire in ws/handler.ts once that module is implemented
-wss.on('connection', (ws, _req) => {
-  logger.info('WebSocket client connected');
-  ws.on('close', () => {
-    logger.info('WebSocket client disconnected');
-  });
-});
+// REQ-WS-04/05/06/07: Wire WebSocket handler for gameplay broadcasts
+setupWsHandler(wss);
 
 const PORT = Number(process.env.PORT) || 8080;
 
@@ -72,7 +69,12 @@ function shutdown(signal: string): void {
   }, 5000);
   forceExit.unref();
 
-  // Terminate all WebSocket clients, then close servers
+  // Clear game engine timers and terminate all WebSocket clients
+  try {
+    clearAllTimers();
+  } catch (err) {
+    logger.error({ err }, 'Error clearing game timers');
+  }
   wss.clients.forEach((client) => client.terminate());
   try {
     wss.close(() => {
