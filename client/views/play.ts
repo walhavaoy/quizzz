@@ -68,7 +68,7 @@ export class PlayView {
 
   private attachWsHandlers(): void {
     this.wsClient.on('question', (msg) => {
-      const q: Question = { id: '', text: msg.text, options: msg.options, correctIndex: -1 };
+      const q: Question = msg.question;
       if (this.phase === 'reveal') {
         // REQ-ST-11: Brief loading state between reveal and new question
         this.renderLoading('Next question…');
@@ -91,19 +91,14 @@ export class PlayView {
     this.wsClient.on('round_result', (msg) => {
       this.phase = 'reveal';
       const prevScore = this.myScore;
-      const me = msg.scores.find((p) => p.playerId === this.session.playerId);
+      const me = msg.players.find((p) => p.id === this.session.playerId);
       if (me) this.myScore = me.score;
 
       this.showReveal(msg.correctIndex, prevScore < this.myScore);
     });
 
     this.wsClient.on('game_over', (msg) => {
-      this.session.players = msg.rankings.map((r) => ({
-        id: r.playerId,
-        nickname: r.nickname,
-        score: r.score,
-        currentAnswer: null,
-      }));
+      this.session.players = msg.players;
       this.router.navigate('/result');
     });
   }
