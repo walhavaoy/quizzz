@@ -1,4 +1,4 @@
-import type { Player } from '../../src/shared/types.js';
+import type { JoinGameResponse } from '../../src/shared/types.js';
 import type { WsClient } from '../ws-client.js';
 import type { Router } from '../router.js';
 import type { GameSession } from '../session.js';
@@ -18,6 +18,7 @@ export class LobbyView {
   private session: GameSession;
   private phase: LobbyPhase = 'join-form';
   private players: Array<{ id: string; nickname: string; score: number }> = [];
+  private hostId: string | null = null;
   private isActive = false;
 
   constructor(
@@ -50,6 +51,7 @@ export class LobbyView {
 
   private attachWsHandlers(): void {
     this.wsClient.on('player_joined', (msg) => {
+      this.hostId = msg.hostId;
       this.players = msg.players;
       if (this.phase === 'waiting') {
         this.renderPlayerList();
@@ -85,6 +87,7 @@ export class LobbyView {
           placeholder="Enter nickname (max 20 chars)"
           maxlength="20"
           autocomplete="off"
+          aria-label="Enter your nickname"
           data-testid="quizzz-input-nickname"
         />
         <button
@@ -92,7 +95,7 @@ export class LobbyView {
           id="lobby-join-btn"
           data-testid="quizzz-button-join"
         >Join Game</button>
-        <div id="lobby-join-error" class="text-dim" style="font-size:0.85rem;margin-top:0.5rem;min-height:1.2rem;"></div>
+        <div id="lobby-join-error" class="text-dim" aria-live="polite" style="font-size:0.85rem;margin-top:0.5rem;min-height:1.2rem;"></div>
       </div>
     `;
 
@@ -159,8 +162,8 @@ export class LobbyView {
 
     list.innerHTML = this.players
       .map((p) => {
-        const isYou = p.id === this.session.playerId;
-        const badge = isYou ? '<span class="host-badge">you</span>' : '';
+        const isHost = p.id === this.hostId;
+        const badge = isHost ? '<span class="host-badge">Host</span>' : '';
         const name = this.escapeHtml(p.nickname);
         return `<li><span>${name}</span>${badge}</li>`;
       })
@@ -211,16 +214,15 @@ export class LobbyView {
         const text = await joinResp.text();
         throw new Error(`Failed to join game: ${text}`);
       }
-      const joinData = (await joinResp.json()) as { playerId: string; gameId: string; players: Player[] };
+      const joinData = (await joinResp.json()) as JoinGameResponse;
 
       // Update session
       this.session.gameId = gameId;
       this.session.playerId = joinData.playerId;
       this.session.players = joinData.players;
       this.players = joinData.players;
-
-      // First joiner is host (player list length was 0 before joining)
-      this.session.isHost = joinData.players.length === 1;
+      this.hostId = joinData.hostId;
+      this.session.isHost = joinData.isHost;
 
       // Step 3: open WebSocket
       this.wsClient.connect(gameId, joinData.playerId);
