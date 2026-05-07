@@ -1,254 +1,254 @@
-// REQ-LB-01 through REQ-LB-07, REQ-LB-10, REQ-LB-11: Lobby view
+import type { Player } from '../../src/shared/types.js';
+import type { WsClient } from '../ws-client.js';
+import type { Router } from '../router.js';
+import type { GameSession } from '../session.js';
 
-import type {
-  JoinGameResponse,
-  CreateGameResponse,
-} from '../../src/shared/types';
-import { WsClient } from '../ws-client.js';
-import { navigate } from '../router.js';
+type LobbyPhase = 'join-form' | 'waiting';
 
-// ─── Module state ─────────────────────────────────────────────────────────────
+/**
+ * Lobby view: nickname entry, live player list, and host start control.
+ *
+ * REQ-LB-01/02/03/04/05/06/07: Core lobby features.
+ * REQ-ST-11: Waiting indicator for non-host players after joining.
+ */
+export class LobbyView {
+  private el: HTMLElement;
+  private wsClient: WsClient;
+  private router: Router;
+  private session: GameSession;
+  private phase: LobbyPhase = 'join-form';
+  private players: Array<{ id: string; nickname: string; score: number }> = [];
+  private isActive = false;
 
-type LobbyPlayer = { id: string; nickname: string; score: number };
+  constructor(
+    el: HTMLElement,
+    wsClient: WsClient,
+    router: Router,
+    session: GameSession,
+  ) {
+    this.el = el;
+    this.wsClient = wsClient;
+    this.router = router;
+    this.session = session;
 
-let gameId: string | null = null;
-let playerId: string | null = null;
-let isHost = false;
-let hostId: string | null = null;
-let players: LobbyPlayer[] = [];
-
-const wsClient = new WsClient();
-
-// ─── Browser-compatible logger (pino is server-only) ──────────────────────────
-
-const log = {
-  info: (msg: string, meta?: unknown) => console.info('[Lobby]', msg, meta ?? ''),
-  warn: (msg: string, meta?: unknown) => console.warn('[Lobby]', msg, meta ?? ''),
-  error: (msg: string, meta?: unknown) => console.error('[Lobby]', msg, meta ?? ''),
-};
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-}
-
-function showError(msg: string): void {
-  const el = document.getElementById('lobby-error');
-  if (el) {
-    el.textContent = msg;
-    el.classList.add('visible');
+    router.register('/', el, () => this.activate(), () => this.deactivate());
+    this.renderJoinForm();
+    this.attachWsHandlers();
   }
-}
 
-function clearError(): void {
-  const el = document.getElementById('lobby-error');
-  if (el) {
-    el.textContent = '';
-    el.classList.remove('visible');
+  // ─── Router lifecycle ─────────────────────────────────────────────────────
+
+  private activate(): void {
+    this.isActive = true;
   }
-}
 
-// REQ-LB-02, REQ-LB-10: Render player list with count badge
-function renderPlayers(): void {
-  const list = document.querySelector<HTMLUListElement>(
-    '[data-testid="quizzz-list-players"]',
-  );
-  const countEl = document.getElementById('lobby-player-count');
+  private deactivate(): void {
+    this.isActive = false;
+  }
 
-  if (list) {
-    list.innerHTML = players
+  // ─── WebSocket handlers ───────────────────────────────────────────────────
+
+  private attachWsHandlers(): void {
+    this.wsClient.on('player_joined', (msg) => {
+      this.players = msg.players;
+      if (this.phase === 'waiting') {
+        this.renderPlayerList();
+      }
+    });
+
+    this.wsClient.on('player_left', (msg) => {
+      this.players = this.players.filter((p) => p.id !== msg.playerId);
+      if (this.phase === 'waiting') {
+        this.renderPlayerList();
+      }
+    });
+
+    this.wsClient.on('game_start', () => {
+      this.router.navigate('/play');
+    });
+  }
+
+  // ─── Rendering ────────────────────────────────────────────────────────────
+
+  private renderJoinForm(): void {
+    this.phase = 'join-form';
+    this.el.innerHTML = `
+      <div class="lobby-hero">
+        <h1>quizzz</h1>
+        <p>Multiplayer trivia — first to join is host</p>
+      </div>
+      <div class="card">
+        <input
+          class="form-input"
+          type="text"
+          id="lobby-nickname"
+          placeholder="Enter nickname (max 20 chars)"
+          maxlength="20"
+          autocomplete="off"
+          data-testid="quizzz-input-nickname"
+        />
+        <button
+          class="btn btn-primary"
+          id="lobby-join-btn"
+          data-testid="quizzz-button-join"
+        >Join Game</button>
+        <div id="lobby-join-error" class="text-dim" style="font-size:0.85rem;margin-top:0.5rem;min-height:1.2rem;"></div>
+      </div>
+    `;
+
+    const input = this.el.querySelector<HTMLInputElement>('#lobby-nickname');
+    const btn = this.el.querySelector<HTMLButtonElement>('#lobby-join-btn');
+
+    input?.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key === 'Enter') btn?.click();
+    });
+
+    btn?.addEventListener('click', () => {
+      void this.handleJoin();
+    });
+  }
+
+  private renderWaitingRoom(): void {
+    this.phase = 'waiting';
+    const isHost = this.session.isHost;
+
+    this.el.innerHTML = `
+      <div class="lobby-hero">
+        <h1>quizzz</h1>
+        <p>Share this URL for others to join</p>
+      </div>
+      <div class="card">
+        <h2>Players</h2>
+        <p class="lobby-player-count" id="lobby-count"></p>
+        <ul class="player-list" id="lobby-players" data-testid="quizzz-list-players"></ul>
+
+        ${isHost
+          ? `<button
+               class="btn btn-primary"
+               id="lobby-start-btn"
+               data-testid="quizzz-button-start"
+             >Start Game</button>`
+          : `<div id="lobby-waiting-indicator">
+               <div class="waiting-dots" data-testid="quizzz-indicator-waiting">
+                 <span></span><span></span><span></span>
+               </div>
+               <p class="waiting-label">Waiting for host to start...</p>
+             </div>`
+        }
+      </div>
+    `;
+
+    this.renderPlayerList();
+
+    if (isHost) {
+      const startBtn = this.el.querySelector<HTMLButtonElement>('#lobby-start-btn');
+      startBtn?.addEventListener('click', () => {
+        this.handleStart();
+      });
+    }
+  }
+
+  private renderPlayerList(): void {
+    const list = this.el.querySelector<HTMLUListElement>('#lobby-players');
+    const count = this.el.querySelector<HTMLParagraphElement>('#lobby-count');
+    if (!list) return;
+
+    if (count) {
+      count.textContent = `${this.players.length} player${this.players.length !== 1 ? 's' : ''} in lobby`;
+    }
+
+    list.innerHTML = this.players
       .map((p) => {
-        const initial = escapeHtml(p.nickname.charAt(0).toUpperCase());
-        const name = escapeHtml(p.nickname);
-        const avatarClass = (p.id === hostId) ? 'host' : 'guest';
-        const hostBadge =
-          (p.id === hostId) ? '<span class="host-badge">Host</span>' : '';
-        return `<li class="player-item">
-          <div class="player-avatar ${avatarClass}">${initial}</div>
-          <span class="player-name">${name}</span>
-          ${hostBadge}
-        </li>`;
+        const isYou = p.id === this.session.playerId;
+        const badge = isYou ? '<span class="host-badge">you</span>' : '';
+        const name = this.escapeHtml(p.nickname);
+        return `<li><span>${name}</span>${badge}</li>`;
       })
       .join('');
   }
 
-  if (countEl) {
-    countEl.textContent = String(players.length);
-  }
-}
+  // ─── Actions ──────────────────────────────────────────────────────────────
 
-// ─── Join handler ─────────────────────────────────────────────────────────────
+  private async handleJoin(): Promise<void> {
+    const input = this.el.querySelector<HTMLInputElement>('#lobby-nickname');
+    const btn = this.el.querySelector<HTMLButtonElement>('#lobby-join-btn');
+    const errEl = this.el.querySelector<HTMLDivElement>('#lobby-join-error');
 
-async function handleJoin(): Promise<void> {
-  const input = document.querySelector<HTMLInputElement>(
-    '[data-testid="quizzz-input-nickname"]',
-  );
-  const btn = document.querySelector<HTMLButtonElement>(
-    '[data-testid="quizzz-button-join"]',
-  );
-  if (!input || !btn) return;
-
-  // REQ-LB-11: Validate nickname
-  const nickname = input.value.trim();
-  if (nickname.length === 0) {
-    showError('Nickname is required');
-    return;
-  }
-  if (nickname.length > 20) {
-    showError('Nickname must be 20 characters or less');
-    return;
-  }
-
-  clearError();
-  btn.disabled = true;
-
-  try {
-    // Determine game ID: prefer ?game= query param, then create a new game
-    if (!gameId) {
-      const params = new URLSearchParams(location.search);
-      const existing = params.get('game');
-      if (existing) {
-        gameId = existing;
-      } else {
-        const createRes = await fetch('/api/games', { method: 'POST' });
-        if (!createRes.ok) {
-          const body = await createRes.text();
-          throw new Error(`Create game failed ${createRes.status}: ${body}`);
-        }
-        const createData = (await createRes.json()) as CreateGameResponse;
-        gameId = createData.gameId;
-        // Share the URL so others can join the same game
-        const url = new URL(location.href);
-        url.searchParams.set('game', gameId);
-        history.replaceState(null, '', url.toString());
-      }
+    const nickname = input?.value.trim() ?? '';
+    if (!nickname) {
+      if (errEl) errEl.textContent = 'Please enter a nickname.';
+      input?.focus();
+      return;
     }
 
-    // REQ-LB-01: Join the game via REST
-    const joinRes = await fetch(
-      `/api/games/${encodeURIComponent(gameId)}/join`,
-      {
+    if (btn) btn.disabled = true;
+    if (errEl) errEl.textContent = '';
+
+    try {
+      // Step 1: create a game (or use gameId from URL)
+      const urlGameId = new URLSearchParams(window.location.search).get('gameId');
+      let gameId = urlGameId ?? '';
+
+      if (!gameId) {
+        const createResp = await fetch('/api/games', { method: 'POST' });
+        if (!createResp.ok) {
+          const text = await createResp.text();
+          throw new Error(`Failed to create game: ${text}`);
+        }
+        const createData = (await createResp.json()) as { gameId: string };
+        gameId = createData.gameId;
+        // Update URL so others can join with the same gameId
+        history.replaceState({ path: '/' }, '', `/?gameId=${encodeURIComponent(gameId)}`);
+      }
+
+      // Step 2: join the game
+      const joinResp = await fetch(`/api/games/${encodeURIComponent(gameId)}/join`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nickname }),
-      },
-    );
-    if (!joinRes.ok) {
-      const body = await joinRes.text();
-      throw new Error(`Join game failed ${joinRes.status}: ${body}`);
+      });
+      if (!joinResp.ok) {
+        const text = await joinResp.text();
+        throw new Error(`Failed to join game: ${text}`);
+      }
+      const joinData = (await joinResp.json()) as { playerId: string; gameId: string; players: Player[] };
+
+      // Update session
+      this.session.gameId = gameId;
+      this.session.playerId = joinData.playerId;
+      this.session.players = joinData.players;
+      this.players = joinData.players;
+
+      // First joiner is host (player list length was 0 before joining)
+      this.session.isHost = joinData.players.length === 1;
+
+      // Step 3: open WebSocket
+      this.wsClient.connect(gameId, joinData.playerId);
+
+      this.renderWaitingRoom();
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Something went wrong.';
+      if (errEl) errEl.textContent = message;
+      if (btn) btn.disabled = false;
     }
-    const joinData = (await joinRes.json()) as JoinGameResponse;
-
-    playerId = joinData.playerId;
-    isHost = joinData.isHost;
-    hostId = joinData.hostId;
-    players = joinData.players;
-
-    // Show player list, hide join form
-    const form = document.getElementById('lobby-form');
-    const playersSection = document.getElementById('lobby-players');
-    const startBtn = document.getElementById(
-      'lobby-start-btn',
-    ) as HTMLButtonElement | null;
-
-    if (form) form.style.display = 'none';
-    if (playersSection) playersSection.classList.add('active');
-
-    // REQ-LB-04: Start button only for host
-    if (startBtn) {
-      startBtn.style.display = isHost ? '' : 'none';
-      startBtn.setAttribute('aria-hidden', isHost ? 'false' : 'true');
-    }
-
-    renderPlayers();
-    log.info('Joined game', { gameId, playerId, isHost });
-
-    // REQ-LB-03: Connect WebSocket for live updates
-    wsClient.connect(gameId, playerId);
-  } catch (err) {
-    log.error('Join failed', { err });
-    showError('Could not join game. Please try again.');
-    btn.disabled = false;
   }
-}
 
-// ─── Start handler ────────────────────────────────────────────────────────────
+  private handleStart(): void {
+    // Send start_game via WebSocket
+    this.wsClient.send({ type: 'start_game' });
 
-// REQ-LB-05: Host calls backend to start the game
-async function handleStart(): Promise<void> {
-  if (!gameId) return;
-
-  const btn = document.getElementById(
-    'lobby-start-btn',
-  ) as HTMLButtonElement | null;
-  if (btn) btn.disabled = true;
-
-  try {
-    const res = await fetch(
-      `/api/games/${encodeURIComponent(gameId)}/start`,
-      { method: 'POST' },
-    );
-    if (!res.ok) {
-      const body = await res.text();
-      throw new Error(`Start game failed ${res.status}: ${body}`);
-    }
-    await res.text(); // drain body
-  } catch (err) {
-    log.error('Start failed', { err });
-    if (btn) btn.disabled = false;
+    const btn = this.el.querySelector<HTMLButtonElement>('#lobby-start-btn');
+    if (btn) btn.disabled = true;
   }
-}
 
-// ─── Init ─────────────────────────────────────────────────────────────────────
+  // ─── Utility ──────────────────────────────────────────────────────────────
 
-// REQ-LB-07: Wire up event listeners on elements with data-testid attributes
-export function initLobby(): void {
-  const joinBtn = document.querySelector<HTMLButtonElement>(
-    '[data-testid="quizzz-button-join"]',
-  );
-  const startBtn = document.getElementById(
-    'lobby-start-btn',
-  ) as HTMLButtonElement | null;
-  const input = document.querySelector<HTMLInputElement>(
-    '[data-testid="quizzz-input-nickname"]',
-  );
-
-  joinBtn?.addEventListener('click', () => {
-    handleJoin().catch((err: unknown) =>
-      log.error('Unhandled join error', { err }),
-    );
-  });
-
-  // Support Enter key to submit
-  input?.addEventListener('keydown', (e: KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleJoin().catch((err: unknown) =>
-        log.error('Unhandled join error', { err }),
-      );
-    }
-  });
-
-  startBtn?.addEventListener('click', () => {
-    handleStart().catch((err: unknown) =>
-      log.error('Unhandled start error', { err }),
-    );
-  });
-
-  // REQ-LB-02: Update player list on new joins
-  wsClient.on('player_joined', (msg) => {
-    hostId = msg.hostId;
-    players = msg.players;
-    renderPlayers();
-  });
-
-  // REQ-LB-06: Navigate to play view when game starts
-  wsClient.on('game_start', (_msg) => {
-    navigate('/play');
-  });
+  private escapeHtml(str: string): string {
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
 }
