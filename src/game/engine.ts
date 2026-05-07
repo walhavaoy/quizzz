@@ -1,16 +1,28 @@
 import { randomUUID } from 'crypto';
+import pino from 'pino';
 import { GameState, GameStatus, Player, Question, EngineError } from '../shared/types.js';
 import questionsPool from '../shared/questions.json';
+
+const logger = pino({ name: 'quizzz:engine' });
 
 const QUESTIONS_PER_GAME = 5;
 
 // Cast imported JSON to typed array
-const allQuestions: Question[] = questionsPool as Question[];
+const allQuestions: Question[] = questionsPool as unknown as Question[];
 
 const games = new Map<string, GameState>();
 
 function generateGameId(): string {
   return randomUUID().replace(/-/g, '').slice(0, 6).toUpperCase();
+}
+
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }
 
 export function createGame(): string {
@@ -21,13 +33,14 @@ export function createGame(): string {
   }
   const state: GameState = {
     id,
-    status: 'lobby' as GameStatus,
+    status: GameStatus.Lobby,
     players: new Map<string, Player>(),
     hostId: '',
     currentRound: 0,
     questions: [],
   };
   games.set(id, state);
+  logger.info({ gameId: id }, 'Game created');
   return id;
 }
 
@@ -40,7 +53,7 @@ export function joinGame(gameId: string, nickname: string): string {
   if (!game) {
     throw new EngineError('NOT_FOUND', `Game ${gameId} not found`);
   }
-  if (game.status !== 'lobby') {
+  if (game.status !== GameStatus.Lobby) {
     throw new EngineError('BAD_INPUT', 'Cannot join a game that has already started');
   }
   const trimmed = nickname.trim();
@@ -65,6 +78,7 @@ export function joinGame(gameId: string, nickname: string): string {
   if (game.hostId === '') {
     game.hostId = playerId;
   }
+  logger.info({ gameId, playerId, nickname: trimmed }, 'Player joined');
   return playerId;
 }
 
@@ -76,17 +90,20 @@ export function startGame(gameId: string, playerId: string): void {
   if (game.hostId !== playerId) {
     throw new EngineError('FORBIDDEN', 'Only the host can start the game');
   }
-  if (game.status !== 'lobby') {
+  if (game.status !== GameStatus.Lobby) {
     throw new EngineError('BAD_INPUT', 'Game has already started');
   }
   if (game.players.size === 0) {
     throw new EngineError('BAD_INPUT', 'Cannot start a game with no players');
   }
-  // Select QUESTIONS_PER_GAME random questions
-  const shuffled = [...allQuestions].sort(() => Math.random() - 0.5);
-  game.questions = shuffled.slice(0, QUESTIONS_PER_GAME);
-  game.status = 'playing';
+  if (allQuestions.length === 0) {
+    throw new EngineError('BAD_INPUT', 'No questions available');
+  }
+  // Select QUESTIONS_PER_GAME random questions using Fisher-Yates shuffle
+  game.questions = shuffle(allQuestions).slice(0, QUESTIONS_PER_GAME);
+  game.status = GameStatus.Playing;
   game.currentRound = 0;
+  logger.info({ gameId, players: game.players.size }, 'Game started');
 }
 
 export function submitAnswer(
@@ -98,7 +115,7 @@ export function submitAnswer(
   if (!game) {
     throw new EngineError('NOT_FOUND', `Game ${gameId} not found`);
   }
-  if (game.status !== 'playing') {
+  if (game.status !== GameStatus.Playing) {
     throw new EngineError('BAD_INPUT', 'Game is not in a playing state');
   }
   const player = game.players.get(playerId);
