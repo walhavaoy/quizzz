@@ -18,6 +18,8 @@ const QUESTION_TIME_MS = 15_000;
 const REVEAL_TIME_MS = 5_000;
 const TICK_INTERVAL_MS = 1_000;
 const SCORE_CORRECT = 10;
+// Grace period after game over before removing from memory (allows clients to read final results)
+const CLEANUP_DELAY_MS = 60_000;
 
 // ---------------------------------------------------------------------------
 // Engine event callbacks
@@ -71,6 +73,7 @@ interface ActiveTimer {
 }
 
 const activeTimers = new Map<string, ActiveTimer>();
+const cleanupTimers = new Map<string, NodeJS.Timeout>();
 
 export function clearAllTimers(): void {
   for (const [gameId, timer] of activeTimers) {
@@ -78,6 +81,11 @@ export function clearAllTimers(): void {
     if (timer.revealTimeout) clearTimeout(timer.revealTimeout);
     activeTimers.delete(gameId);
     logger.info({ gameId }, 'Timer cleared');
+  }
+  for (const [gameId, timeout] of cleanupTimers) {
+    clearTimeout(timeout);
+    cleanupTimers.delete(gameId);
+    logger.info({ gameId }, 'Cleanup timer cleared');
   }
 }
 
@@ -323,4 +331,13 @@ function finishGame(game: GameState): void {
     if (timer.revealTimeout) clearTimeout(timer.revealTimeout);
     activeTimers.delete(game.id);
   }
+
+  // Schedule delayed memory cleanup — 60 seconds after game over so clients can still read results
+  const cleanupTimeout = setTimeout(() => {
+    games.delete(game.id);
+    cleanupTimers.delete(game.id);
+    logger.info({ gameId: game.id }, 'Finished game cleaned up from memory');
+  }, CLEANUP_DELAY_MS);
+  cleanupTimeout.unref();
+  cleanupTimers.set(game.id, cleanupTimeout);
 }
