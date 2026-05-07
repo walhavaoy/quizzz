@@ -1,6 +1,6 @@
 apiVersion: v2
 name: quizzz
-description: A multiplayer trivia quiz game web app
+description: Multiplayer trivia quiz game
 type: application
 version: 0.1.0
 appVersion: "0.1.0"

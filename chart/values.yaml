@@ -1,30 +1,33 @@
+replicaCount: 1
+
 image:
   repository: quizzz
   pullPolicy: IfNotPresent
-  tag: "latest"
-
-replicaCount: 1
+  tag: ""
 
 service:
   type: ClusterIP
-  port: 80
-  targetPort: 8080
+  port: 8080
 
 ingress:
   enabled: true
-  className: traefik
-  annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/router.tls: "true"
+  className: ""
+  annotations: {}
   hosts:
     - host: quizzz.tmpclaw.io
       paths:
         - path: /
           pathType: Prefix
-    - host: shell.quizzz.tmpclaw.io
-      paths:
-        - path: /
-          pathType: Prefix
+
+# Autoscaling is disabled by default because quizzz holds all game state
+# in-memory in a single process. Scaling beyond 1 replica would break active
+# sessions unless sticky sessions or a shared state layer (e.g. Redis) is added.
+# Only enable autoscaling after addressing the in-memory state limitation.
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 75
 
 resources:
   requests:
