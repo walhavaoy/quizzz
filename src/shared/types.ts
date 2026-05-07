@@ -1,19 +1,20 @@
-// Shared TypeScript types for the quizzz application (backend + frontend)
+// Shared TypeScript types for quizzz — used by both server and client
 
 export type GameStatus = 'lobby' | 'playing' | 'reveal' | 'finished';
-
-export interface Question {
-  id: number;
-  text: string;
-  options: [string, string, string, string];
-  correctIndex: 0 | 1 | 2 | 3;
-}
 
 export interface Player {
   id: string;
   nickname: string;
   score: number;
   currentAnswer: number | null;
+}
+
+export interface Question {
+  id: number;
+  text: string;
+  options: string[];
+  /** Only present on the server; not sent to clients in 'question' messages */
+  correctIndex?: number;
 }
 
 export interface GameState {
@@ -26,26 +27,47 @@ export interface GameState {
   timeRemaining: number;
 }
 
-// --- API request types ---
+// ─── Server → Client WebSocket messages ─────────────────────────────────────
 
-export interface JoinRequest {
-  nickname: string;
-}
+export type ServerMessage =
+  | { type: 'player_joined'; player: Player; players: Player[] }
+  | { type: 'game_start'; questionCount: number }
+  | { type: 'question'; round: number; question: Question; totalRounds: number }
+  | { type: 'timer_tick'; remaining: number }
+  | { type: 'round_result'; correctIndex: number; players: Player[] }
+  | { type: 'game_over'; players: Player[] }
+  | { type: 'player_left'; playerId: string; players: Player[] };
 
-export interface AnswerRequest {
-  playerId: string;
-  answerIndex: number;
-}
+// ─── Client → Server WebSocket messages ─────────────────────────────────────
 
-// --- API response types ---
+export type ClientMessage =
+  | { type: 'answer'; optionIndex: number }
+  | { type: 'start_game' };
+
+// ─── Connection status (client-only) ────────────────────────────────────────
+
+export type ConnectionStatus = 'connecting' | 'connected' | 'disconnected' | 'reconnecting';
+
+export type WsEventType = ServerMessage['type'] | 'status_change';
+
+// ─── API request/response types ─────────────────────────────────────────────
 
 export interface CreateGameResponse {
   gameId: string;
 }
 
+export interface JoinRequest {
+  nickname: string;
+}
+
 export interface JoinResponse {
   playerId: string;
   isHost: boolean;
+}
+
+export interface AnswerRequest {
+  playerId: string;
+  answerIndex: number;
 }
 
 export interface AnswerResponse {
@@ -56,7 +78,16 @@ export interface ErrorResponse {
   error: string;
 }
 
-// --- WebSocket message types (discriminated union) ---
+// Legacy aliases kept for compatibility with future WS handler code
+export type JoinGameRequest = JoinRequest;
+
+export interface JoinGameResponse {
+  playerId: string;
+  gameId: string;
+  players: Player[];
+}
+
+// ─── WebSocket message types (discriminated union) ───────────────────────────
 
 export type WsServerMessage =
   | { type: 'game_state'; payload: GameState }

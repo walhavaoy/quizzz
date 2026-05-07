@@ -1,0 +1,37 @@
+{{/*
+HorizontalPodAutoscaler for quizzz.
+
+WARNING: autoscaling.enabled defaults to false because quizzz holds all game
+state in-memory in a single process. Running multiple replicas without sticky
+sessions or a shared state layer (e.g. Redis) will break active game sessions —
+players on different replicas will not see each other's answers or score updates.
+
+Prerequisites before enabling:
+  - The Deployment must set resources.requests.cpu on the quizzz container;
+    the CPU utilization metric will not function without it.
+  - Implement sticky sessions (e.g. session affinity on the Service) or move
+    game state to a shared store to avoid cross-replica session inconsistency.
+*/}}
+{{- if .Values.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Release.Name }}-quizzz
+  labels:
+    app.kubernetes.io/name: quizzz
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Release.Name }}-quizzz
+  minReplicas: {{ .Values.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
+{{- end }}
