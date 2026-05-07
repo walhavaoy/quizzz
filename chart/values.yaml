@@ -20,13 +20,9 @@ ingress:
   annotations:
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
-    nginx.org/websocket-services: "{{ .Release.Name }}-quizzz"
+    nginx.org/websocket-services: "{{ include \"quizzz.fullname\" . }}"
   hosts:
     - host: quizzz.tmpclaw.io
-      paths:
-        - path: /
-          pathType: Prefix
-    - host: shell.quizzz.tmpclaw.io
       paths:
         - path: /
           pathType: Prefix
@@ -34,7 +30,6 @@ ingress:
   # - secretName: quizzz-tls
   #   hosts:
   #     - quizzz.tmpclaw.io
-  #     - shell.quizzz.tmpclaw.io
 
 # networkPolicy.enabled defaults to false — the agent deployer SA
 # (tmpclaw-agent-web) lacks networking.k8s.io/networkpolicies RBAC.

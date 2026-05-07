@@ -12,6 +12,10 @@ const pino_1 = __importDefault(require("pino"));
 const logger = (0, pino_1.default)({ name: 'quizzz' });
 const app = (0, express_1.default)();
 exports.app = app;
+// Health check endpoint (before middleware that could block it)
+app.get('/healthz', (_req, res) => {
+    res.json({ status: 'ok' });
+});
 // Serve static files from public/ — resolved relative to compiled output in dist/
 app.use(express_1.default.static(path_1.default.join(__dirname, '..', 'public')));
 // TODO: Mount REST API routes here once routes/api.ts is implemented:
