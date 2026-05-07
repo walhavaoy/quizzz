@@ -1,9 +1,14 @@
+# replicaCount should stay at 1 — quizzz holds all game state in-memory
+# in a single process. Multiple replicas would break active sessions.
 replicaCount: 1
 
 image:
   repository: quizzz
   pullPolicy: IfNotPresent
-  tag: ""
+  # Overridable via --set-string image.tag=...
+  tag: "0.1.0"
+
+containerPort: 8080
 
 service:
   type: ClusterIP
@@ -11,13 +16,30 @@ service:
 
 ingress:
   enabled: true
-  className: ""
-  annotations: {}
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.org/websocket-services: "{{ .Release.Name }}-quizzz"
   hosts:
     - host: quizzz.tmpclaw.io
       paths:
         - path: /
           pathType: Prefix
+    - host: shell.quizzz.tmpclaw.io
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  # - secretName: quizzz-tls
+  #   hosts:
+  #     - quizzz.tmpclaw.io
+  #     - shell.quizzz.tmpclaw.io
+
+# networkPolicy.enabled defaults to false — the agent deployer SA
+# (tmpclaw-agent-web) lacks networking.k8s.io/networkpolicies RBAC.
+networkPolicy:
+  enabled: false
 
 # Autoscaling is disabled by default because quizzz holds all game state
 # in-memory in a single process. Scaling beyond 1 replica would break active
