@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-quizzz
+  labels:
+    app: {{ .Release.Name }}-quizzz
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-quizzz
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-quizzz
+    spec:
+      containers:
+        - name: quizzz
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /api/questions
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /api/questions
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          env:
+            - name: PORT
+              value: "8080"
