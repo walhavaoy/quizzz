@@ -1,0 +1,222 @@
+/* quizzz — global styles */
+
+/* ─── Custom properties ─────────────────────────────────────────────────── */
+:root {
+  --bg: #1a1a2e;
+  --surface: #2a2a4a;
+  --accent: #7c3aed;
+  --accent-hover: #6d28d9;
+  --teal: #14b8a6;
+  --yellow: #facc15;
+  --text: #f0f0f0;
+  --text-dim: #888888;
+
+  /* Podium colours */
+  --gold: #facc15;
+  --silver: #c0c0c0;
+  --bronze: #cd7f32;
+
+  /* Spacing */
+  --radius: 0.5rem;
+}
+
+/* ─── Reset & base ──────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
+  min-height: 100vh;
+}
+
+#app {
+  width: 100%;
+}
+
+/* ─── Container ─────────────────────────────────────────────────────────── */
+.container {
+  max-width: 32rem;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* ─── Page heading ──────────────────────────────────────────────────────── */
+h1 {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+  color: var(--text);
+}
+
+/* ─── Podium (REQ-RS-01) ────────────────────────────────────────────────── */
+.podium {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 2.5rem;
+  padding: 0 1rem;
+}
+
+.podium-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  width: 7rem;
+  border-radius: var(--radius) var(--radius) 0 0;
+  padding: 1rem 0.5rem;
+  color: #1a1a2e;
+  font-weight: 700;
+}
+
+.podium-block .rank {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.podium-block .nick {
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.podium-block .pts {
+  font-size: 0.75rem;
+  margin-top: 0.2rem;
+  opacity: 0.8;
+}
+
+/* CSS order controls left-centre-right visual placement */
+.p1 {
+  height: 10rem;
+  background: var(--gold);
+  order: 2;
+}
+
+.p2 {
+  height: 7rem;
+  background: var(--silver);
+  order: 1;
+}
+
+.p3 {
+  height: 5rem;
+  background: var(--bronze);
+  order: 3;
+}
+
+/* ─── Rankings list (REQ-RS-02/RS-11) ──────────────────────────────────── */
+.rankings {
+  list-style: none;
+  border: 1px solid var(--surface);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.rank-row {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--surface);
+  gap: 1rem;
+}
+
+.rank-row:last-child {
+  border-bottom: none;
+}
+
+.rank-row:nth-child(even) {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* REQ-RS-11: Highlight current player */
+.rank-row.self {
+  background: rgba(124, 58, 237, 0.15);
+  border-left: 3px solid var(--accent);
+}
+
+.rank-num {
+  font-weight: 700;
+  font-size: 1.1rem;
+  width: 2rem;
+  text-align: center;
+  color: var(--text-dim);
+}
+
+.rank-nick {
+  flex: 1;
+  font-size: 0.95rem;
+}
+
+.rank-score {
+  font-weight: 600;
+  color: var(--yellow);
+  font-size: 0.95rem;
+}
+
+/* ─── Play Again button (REQ-RS-03) ─────────────────────────────────────── */
+.btn-again {
+  display: block;
+  width: 100%;
+  padding: 0.9rem;
+  background: var(--accent);
+  color: var(--text);
+  border: none;
+  border-radius: var(--radius);
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.2s;
+}
+
+.btn-again:hover {
+  background: var(--accent-hover);
+}
+
+.btn-again:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ─── Mobile responsive (down to 360px) ────────────────────────────────── */
+@media (max-width: 360px) {
+  body {
+    padding: 1rem 0.5rem;
+  }
+
+  h1 {
+    font-size: 1.4rem;
+  }
+
+  .podium-block {
+    width: 5.5rem;
+  }
+
+  .podium-block .rank {
+    font-size: 1.5rem;
+  }
+
+  .podium-block .nick {
+    font-size: 0.75rem;
+  }
+
+  .rank-row {
+    padding: 0.6rem 0.75rem;
+  }
+}

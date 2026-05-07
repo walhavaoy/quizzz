@@ -34,13 +34,15 @@ export type ServerMessage =
   | { type: 'timer_tick'; remaining: number }
   | { type: 'round_result'; correctIndex: number; players: Player[] }
   | { type: 'game_over'; players: Player[] }
-  | { type: 'player_left'; playerId: string; players: Player[] };
+  | { type: 'player_left'; playerId: string; players: Player[] }
+  | { type: 'back_to_lobby' };
 
 // ─── Client → Server WebSocket messages ─────────────────────────────────────
 
 export type ClientMessage =
   | { type: 'answer'; optionIndex: number }
-  | { type: 'start_game' };
+  | { type: 'start_game' }
+  | { type: 'play_again' };
 
 // ─── Connection status (client-only) ────────────────────────────────────────
 

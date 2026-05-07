@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "text": "What is the chemical symbol for gold?",
+    "options": ["Go", "Gd", "Au", "Ag"],
+    "correctIndex": 2
+  },
+  {
+    "id": 2,
+    "text": "How many bones are in the adult human body?",
+    "options": ["196", "206", "216", "226"],
+    "correctIndex": 1
+  },
+  {
+    "id": 3,
+    "text": "Which planet has the most moons?",
+    "options": ["Jupiter", "Saturn", "Uranus", "Neptune"],
+    "correctIndex": 1
+  },
+  {
+    "id": 4,
+    "text": "What year did the Berlin Wall fall?",
+    "options": ["1987", "1988", "1989", "1990"],
+    "correctIndex": 2
+  },
+  {
+    "id": 5,
+    "text": "Which element has the atomic number 1?",
+    "options": ["Helium", "Hydrogen", "Lithium", "Carbon"],
+    "correctIndex": 1
+  },
+  {
+    "id": 6,
+    "text": "Who wrote 'Crime and Punishment'?",
+    "options": ["Tolstoy", "Chekhov", "Gogol", "Dostoevsky"],
+    "correctIndex": 3
+  },
+  {
+    "id": 7,
+    "text": "What is the smallest country in the world by area?",
+    "options": ["Monaco", "San Marino", "Vatican City", "Liechtenstein"],
+    "correctIndex": 2
+  },
+  {
+    "id": 8,
+    "text": "In which year was the Eiffel Tower completed?",
+    "options": ["1885", "1887", "1889", "1891"],
+    "correctIndex": 2
+  },
+  {
+    "id": 9,
+    "text": "What is the speed of light in a vacuum (km/s)?",
+    "options": ["199,792", "279,792", "299,792", "399,792"],
+    "correctIndex": 2
+  },
+  {
+    "id": 10,
+    "text": "Which programming language was created by Guido van Rossum?",
+    "options": ["Ruby", "Python", "Perl", "Java"],
+    "correctIndex": 1
+  },
+  {
+    "id": 11,
+    "text": "What is the longest river in the world?",
+    "options": ["Amazon", "Yangtze", "Mississippi", "Nile"],
+    "correctIndex": 3
+  },
+  {
+    "id": 12,
+    "text": "How many sides does a regular hexagon have?",
+    "options": ["5", "6", "7", "8"],
+    "correctIndex": 1
+  },
+  {
+    "id": 13,
+    "text": "What is the hardest natural substance on Earth?",
+    "options": ["Quartz", "Corundum", "Diamond", "Titanium"],
+    "correctIndex": 2
+  },
+  {
+    "id": 14,
+    "text": "Who painted the Sistine Chapel ceiling?",
+    "options": ["Leonardo da Vinci", "Raphael", "Michelangelo", "Botticelli"],
+    "correctIndex": 2
+  },
+  {
+    "id": 15,
+    "text": "What is the capital of Australia?",
+    "options": ["Sydney", "Melbourne", "Brisbane", "Canberra"],
+    "correctIndex": 3
+  },
+  {
+    "id": 16,
+    "text": "How many strings does a standard guitar have?",
+    "options": ["4", "5", "6", "7"],
+    "correctIndex": 2
+  },
+  {
+    "id": 17,
+    "text": "What gas do plants absorb from the atmosphere during photosynthesis?",
+    "options": ["Oxygen", "Nitrogen", "Carbon dioxide", "Argon"],
+    "correctIndex": 2
+  },
+  {
+    "id": 18,
+    "text": "Which ocean is the largest?",
+    "options": ["Atlantic", "Indian", "Arctic", "Pacific"],
+    "correctIndex": 3
+  },
+  {
+    "id": 19,
+    "text": "What is 17 × 13?",
+    "options": ["201", "211", "221", "231"],
+    "correctIndex": 2
+  },
+  {
+    "id": 20,
+    "text": "In what year did World War II end?",
+    "options": ["1943", "1944", "1945", "1946"],
+    "correctIndex": 2
+  }
+]
