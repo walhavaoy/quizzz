@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "text": "What is the chemical symbol for gold?",
+    "options": ["Go", "Gd", "Au", "Ag"],
+    "correctIndex": 2
+  },
+  {
+    "id": 2,
+    "text": "Which planet has the most moons?",
+    "options": ["Jupiter", "Saturn", "Uranus", "Neptune"],
+    "correctIndex": 1
+  },
+  {
+    "id": 3,
+    "text": "In what year did the Berlin Wall fall?",
+    "options": ["1987", "1989", "1991", "1993"],
+    "correctIndex": 1
+  },
+  {
+    "id": 4,
+    "text": "Who wrote 'Crime and Punishment'?",
+    "options": ["Tolstoy", "Chekhov", "Dostoevsky", "Turgenev"],
+    "correctIndex": 2
+  },
+  {
+    "id": 5,
+    "text": "What is the largest ocean on Earth?",
+    "options": ["Atlantic", "Indian", "Arctic", "Pacific"],
+    "correctIndex": 3
+  },
+  {
+    "id": 6,
+    "text": "How many bones are in the adult human body?",
+    "options": ["186", "206", "226", "246"],
+    "correctIndex": 1
+  },
+  {
+    "id": 7,
+    "text": "Which element has atomic number 1?",
+    "options": ["Helium", "Oxygen", "Carbon", "Hydrogen"],
+    "correctIndex": 3
+  },
+  {
+    "id": 8,
+    "text": "The Great Wall of China was primarily built to defend against which group?",
+    "options": ["Mongols", "Persians", "Russians", "Japanese"],
+    "correctIndex": 0
+  },
+  {
+    "id": 9,
+    "text": "What programming language was created by Guido van Rossum?",
+    "options": ["Ruby", "Perl", "Python", "Lua"],
+    "correctIndex": 2
+  },
+  {
+    "id": 10,
+    "text": "Which country has won the most FIFA World Cups?",
+    "options": ["Germany", "Argentina", "Italy", "Brazil"],
+    "correctIndex": 3
+  },
+  {
+    "id": 11,
+    "text": "What is the speed of light in a vacuum (approx.)?",
+    "options": ["300,000 km/s", "150,000 km/s", "450,000 km/s", "600,000 km/s"],
+    "correctIndex": 0
+  },
+  {
+    "id": 12,
+    "text": "Who painted the Sistine Chapel ceiling?",
+    "options": ["Leonardo da Vinci", "Raphael", "Michelangelo", "Donatello"],
+    "correctIndex": 2
+  },
+  {
+    "id": 13,
+    "text": "What is the capital of Australia?",
+    "options": ["Sydney", "Melbourne", "Brisbane", "Canberra"],
+    "correctIndex": 3
+  },
+  {
+    "id": 14,
+    "text": "Which gas makes up most of Earth's atmosphere?",
+    "options": ["Oxygen", "Carbon dioxide", "Argon", "Nitrogen"],
+    "correctIndex": 3
+  },
+  {
+    "id": 15,
+    "text": "In which year was the first iPhone released?",
+    "options": ["2005", "2006", "2007", "2008"],
+    "correctIndex": 2
+  },
+  {
+    "id": 16,
+    "text": "What is the longest river in the world?",
+    "options": ["Amazon", "Yangtze", "Mississippi", "Nile"],
+    "correctIndex": 3
+  },
+  {
+    "id": 17,
+    "text": "Who developed the theory of general relativity?",
+    "options": ["Newton", "Bohr", "Einstein", "Planck"],
+    "correctIndex": 2
+  },
+  {
+    "id": 18,
+    "text": "What is the hardest natural substance on Earth?",
+    "options": ["Quartz", "Topaz", "Diamond", "Corundum"],
+    "correctIndex": 2
+  },
+  {
+    "id": 19,
+    "text": "Which country invented paper?",
+    "options": ["Egypt", "China", "Greece", "India"],
+    "correctIndex": 1
+  },
+  {
+    "id": 20,
+    "text": "How many sides does a regular hexagon have?",
+    "options": ["5", "6", "7", "8"],
+    "correctIndex": 1
+  }
+]

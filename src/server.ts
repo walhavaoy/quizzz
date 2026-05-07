@@ -3,6 +3,7 @@ import path from 'path';
 import express from 'express';
 import { WebSocketServer } from 'ws';
 import pino from 'pino';
+import { registerWsHandler } from './ws/handler';
 
 const logger = pino({ name: 'quizzz' });
 
@@ -26,13 +27,8 @@ server.on('upgrade', (req, socket, head) => {
   });
 });
 
-// Stub handler — wire in ws/handler.ts once that module is implemented
-wss.on('connection', (ws, _req) => {
-  logger.info('WebSocket client connected');
-  ws.on('close', () => {
-    logger.info('WebSocket client disconnected');
-  });
-});
+// Wire in WS handler (REQ-WS-01 through REQ-WS-08, REQ-GE-21)
+registerWsHandler(wss);
 
 const PORT = Number(process.env.PORT) || 8080;
 
