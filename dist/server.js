@@ -9,9 +9,19 @@ const path_1 = __importDefault(require("path"));
 const express_1 = __importDefault(require("express"));
 const ws_1 = require("ws");
 const pino_1 = __importDefault(require("pino"));
+const cors_1 = __importDefault(require("cors"));
+const pino_http_1 = __importDefault(require("pino-http"));
 const logger = (0, pino_1.default)({ name: 'quizzz' });
 const app = (0, express_1.default)();
 exports.app = app;
+// Health check endpoint (before middleware that could block it)
+app.get('/healthz', (_req, res) => {
+    res.json({ status: 'ok' });
+});
+// REQ-SV-10: Request logging middleware
+app.use((0, pino_http_1.default)({ logger }));
+// REQ-SV-11: CORS headers — allow all origins
+app.use((0, cors_1.default)());
 // Serve static files from public/ — resolved relative to compiled output in dist/
 app.use(express_1.default.static(path_1.default.join(__dirname, '..', 'public')));
 // TODO: Mount REST API routes here once routes/api.ts is implemented:
@@ -38,16 +48,40 @@ const PORT = Number(process.env.PORT) || 8080;
 server.listen(PORT, () => {
     logger.info({ port: PORT }, 'quizzz server listening');
 });
-// Graceful shutdown
+// REQ-SV-05: Graceful shutdown
+let shuttingDown = false;
 function shutdown(signal) {
-    logger.info({ signal }, 'Shutting down gracefully');
-    server.close((err) => {
-        if (err) {
-            logger.error({ err }, 'Error during server close');
-            process.exit(1);
-        }
-        process.exit(0);
-    });
+    if (shuttingDown)
+        return;
+    shuttingDown = true;
+    logger.info({ signal }, 'Shutdown signal received');
+    // Force-exit if graceful shutdown stalls after 5 s
+    const forceExit = setTimeout(() => {
+        logger.error('Graceful shutdown timed out, forcing exit');
+        process.exit(1);
+    }, 5000);
+    forceExit.unref();
+    // Terminate all WebSocket clients, then close servers
+    wss.clients.forEach((client) => client.terminate());
+    try {
+        wss.close(() => {
+            logger.info('WebSocket server closed');
+            try {
+                server.close(() => {
+                    logger.info('HTTP server closed');
+                    process.exit(0);
+                });
+            }
+            catch (err) {
+                logger.error({ err }, 'Error closing HTTP server');
+                process.exit(1);
+            }
+        });
+    }
+    catch (err) {
+        logger.error({ err }, 'Error closing WebSocket server');
+        process.exit(1);
+    }
 }
 process.on('SIGTERM', () => shutdown('SIGTERM'));
 process.on('SIGINT', () => shutdown('SIGINT'));
