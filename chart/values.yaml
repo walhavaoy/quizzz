@@ -1,0 +1,35 @@
+image:
+  repository: quizzz
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+replicaCount: 1
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+ingress:
+  enabled: true
+  className: traefik
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+  hosts:
+    - host: quizzz.tmpclaw.io
+      paths:
+        - path: /
+          pathType: Prefix
+    - host: shell.quizzz.tmpclaw.io
+      paths:
+        - path: /
+          pathType: Prefix
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
