@@ -1,7 +1,6 @@
 // REQ-RS-01/RS-02/RS-03/RS-04/RS-05/RS-11: Result view with podium and rankings
 import type { Player } from '../../src/shared/types';
 import { WsClient } from '../ws-client';
-import { navigate } from '../router';
 
 interface RankedPlayer {
   rank: number;
@@ -105,8 +104,4 @@ export function showResultView(players: Player[], wsClient: WsClient): void {
     });
   }
 
-  // REQ-RS-03: Navigate back to lobby when server confirms reset
-  wsClient.on('back_to_lobby', () => {
-    navigate('/');
-  });
 }

@@ -25,6 +25,12 @@ wsClient.on('game_over', (msg) => {
   showResultView(msg.players, wsClient);
 });
 
+// REQ-RS-03: Navigate back to lobby when server confirms reset (registered once at module level
+// to prevent listener accumulation across multiple game cycles)
+wsClient.on('back_to_lobby', () => {
+  navigate('/');
+});
+
 // Register routes
 registerRoute('/', () => {
   showLobbyView();

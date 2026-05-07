@@ -4,7 +4,7 @@ import questionsData from '../shared/questions.json';
 
 const logger = pino({ name: 'quizzz:engine' });
 
-const ALL_QUESTIONS = questionsData as Question[];
+const ALL_QUESTIONS = questionsData as unknown as Question[];
 const QUESTIONS_PER_GAME = 5;
 
 function pickQuestions(): Question[] {

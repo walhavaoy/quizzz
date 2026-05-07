@@ -17,7 +17,7 @@ function broadcast(gameId: string, message: ServerMessage): void {
   if (!clients) return;
   const payload = JSON.stringify(message);
   for (const ws of clients) {
-    if ((ws as WebSocket & { readyState: number }).readyState === 1 /* OPEN */) {
+    if (ws.readyState === 1 /* OPEN */) {
       ws.send(payload);
     }
   }
@@ -68,6 +68,10 @@ export function handleConnection(ws: WebSocket, req: IncomingMessage): void {
     switch (msg.type) {
       case 'play_again': {
         const engine = getOrCreateEngine(gameId);
+        if (engine.getState().status !== 'finished') {
+          logger.warn({ gameId, playerId }, 'play_again rejected — game not finished');
+          break;
+        }
         engine.resetGame();
         logger.info({ gameId, playerId }, 'play_again received — broadcasting back_to_lobby');
         broadcast(gameId, { type: 'back_to_lobby' });
