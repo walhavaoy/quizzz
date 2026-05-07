@@ -10,7 +10,7 @@ import type {
   PlayerLeftMessage,
   ClientMessage,
 } from '../shared/types';
-import { getGame, getPlayer, startGame, registerCallbacks } from '../game/engine';
+import { getGame, getPlayer, isHost, startGame, registerCallbacks } from '../game/engine';
 
 const logger = pino({ name: 'ws-handler' });
 
@@ -176,6 +176,13 @@ function handleConnection(ws: WebSocket, req: IncomingMessage): void {
     switch (msg.type) {
       case 'start_game': {
         logger.info({ gameId, playerId }, 'Received start_game');
+        if (!isHost(game, playerId)) {
+          logger.warn({ gameId, playerId }, 'Non-host attempted to start game');
+          if (ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({ type: 'error', message: 'Only the host can start the game' }));
+          }
+          break;
+        }
         startGame(gameId);
         break;
       }

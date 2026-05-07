@@ -41,6 +41,7 @@ export interface Player {
  */
 export interface GameState {
   id: string;
+  hostId: string;
   status: GameStatus;
   players: Map<string, Player>;
   currentRound: number;
@@ -105,6 +106,11 @@ export interface PlayerLeftMessage {
   nickname: string;
 }
 
+export interface WsErrorMessage {
+  type: 'error';
+  message: string;
+}
+
 export type ServerMessage =
   | PlayerJoinedMessage
   | GameStartMessage
@@ -112,7 +118,8 @@ export type ServerMessage =
   | TimerTickMessage
   | RoundResultMessage
   | GameOverMessage
-  | PlayerLeftMessage;
+  | PlayerLeftMessage
+  | WsErrorMessage;
 
 // ---------------------------------------------------------------------------
 // WebSocket client → server messages

@@ -21,6 +21,7 @@ type MessageTypeMap = {
   round_result: Extract<ServerMessage, { type: 'round_result' }>;
   game_over: Extract<ServerMessage, { type: 'game_over' }>;
   player_left: Extract<ServerMessage, { type: 'player_left' }>;
+  error: Extract<ServerMessage, { type: 'error' }>;
   status_change: StatusChangePayload;
 };
 

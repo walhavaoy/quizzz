@@ -100,6 +100,7 @@ export function createGame(): string {
 
   const game: GameState = {
     id,
+    hostId: '',
     status: GameStatus.Lobby,
     players: new Map(),
     currentRound: 0,
@@ -130,9 +131,16 @@ export function addPlayer(game: GameState, nickname: string): Player {
     score: 0,
     currentAnswer: null,
   };
+  if (game.players.size === 0) {
+    game.hostId = player.id;
+  }
   game.players.set(player.id, player);
   logger.info({ gameId: game.id, playerId: player.id, nickname }, 'Player joined');
   return player;
+}
+
+export function isHost(game: GameState, playerId: string): boolean {
+  return game.hostId === playerId;
 }
 
 export function getPlayer(game: GameState, playerId: string): Player | undefined {
