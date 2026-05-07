@@ -9,6 +9,11 @@ const logger = pino({ name: 'quizzz' });
 
 const app = express();
 
+// Health check endpoint (before middleware that could block it)
+app.get('/healthz', (_req, res) => {
+  res.json({ status: 'ok' });
+});
+
 // Parse JSON request bodies
 app.use(express.json());
 
