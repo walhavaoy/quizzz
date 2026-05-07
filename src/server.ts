@@ -11,6 +11,11 @@ const PORT = Number(process.env['PORT']) || 8080;
 
 const app = express();
 
+// Health check endpoint (before middleware that could block it)
+app.get('/healthz', (_req, res) => {
+  res.json({ status: 'ok' });
+});
+
 // JSON body parser
 app.use(express.json());
 

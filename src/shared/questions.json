@@ -2,8 +2,8 @@
   {
     "id": 1,
     "text": "What is the chemical symbol for gold?",
-    "options": ["Go", "Gd", "Au", "Ag"],
-    "correctIndex": 2
+    "options": ["Au", "Go", "Gd", "Ag"],
+    "correctIndex": 0
   },
   {
     "id": 2,
@@ -13,110 +13,110 @@
   },
   {
     "id": 3,
-    "text": "How many bones are in the adult human body?",
-    "options": ["196", "206", "216", "226"],
+    "text": "In what year did the Titanic sink?",
+    "options": ["1913", "1912", "1915", "1910"],
     "correctIndex": 1
   },
   {
     "id": 4,
-    "text": "Which country has the largest land area?",
-    "options": ["Canada", "China", "United States", "Russia"],
-    "correctIndex": 3
+    "text": "What is the capital of France?",
+    "options": ["Marseille", "Lyon", "Paris", "Nice"],
+    "correctIndex": 2
   },
   {
     "id": 5,
-    "text": "What is the speed of light in a vacuum (approximately)?",
-    "options": ["300,000 km/s", "150,000 km/s", "450,000 km/s", "600,000 km/s"],
-    "correctIndex": 0
+    "text": "Who directed the film 'Inception'?",
+    "options": ["Steven Spielberg", "Christopher Nolan", "James Cameron", "Quentin Tarantino"],
+    "correctIndex": 1
   },
   {
     "id": 6,
-    "text": "Who painted the Mona Lisa?",
-    "options": ["Michelangelo", "Raphael", "Leonardo da Vinci", "Caravaggio"],
+    "text": "What is the largest mammal in the world?",
+    "options": ["African Elephant", "Giraffe", "Blue Whale", "Hippopotamus"],
     "correctIndex": 2
   },
   {
     "id": 7,
-    "text": "In which year did World War II end?",
-    "options": ["1943", "1944", "1945", "1946"],
+    "text": "In which country are the pyramids of Giza located?",
+    "options": ["Sudan", "Libya", "Egypt", "Saudi Arabia"],
     "correctIndex": 2
   },
   {
     "id": 8,
-    "text": "What is the capital of Australia?",
-    "options": ["Sydney", "Melbourne", "Brisbane", "Canberra"],
-    "correctIndex": 3
+    "text": "Who wrote 'Pride and Prejudice'?",
+    "options": ["Charlotte Brontë", "Emily Dickinson", "Jane Austen", "George Eliot"],
+    "correctIndex": 2
   },
   {
     "id": 9,
-    "text": "Which element has the atomic number 1?",
-    "options": ["Helium", "Hydrogen", "Lithium", "Carbon"],
-    "correctIndex": 1
+    "text": "What is the smallest country in the world?",
+    "options": ["Monaco", "San Marino", "Vatican City", "Liechtenstein"],
+    "correctIndex": 2
   },
   {
     "id": 10,
-    "text": "How many sides does a hexagon have?",
-    "options": ["5", "6", "7", "8"],
-    "correctIndex": 1
+    "text": "Which element has the atomic number 1?",
+    "options": ["Helium", "Oxygen", "Hydrogen", "Carbon"],
+    "correctIndex": 2
   },
   {
     "id": 11,
-    "text": "Which ocean is the largest by area?",
-    "options": ["Atlantic", "Indian", "Arctic", "Pacific"],
-    "correctIndex": 3
+    "text": "In which sport would you find a 'home run'?",
+    "options": ["Tennis", "Baseball", "Cricket", "Golf"],
+    "correctIndex": 1
   },
   {
     "id": 12,
-    "text": "What language has the most native speakers in the world?",
-    "options": ["English", "Spanish", "Mandarin Chinese", "Hindi"],
+    "text": "What is the longest river in the world?",
+    "options": ["Amazon", "Yangtze", "Nile", "Mississippi"],
     "correctIndex": 2
   },
   {
     "id": 13,
-    "text": "Which Shakespeare play features the character Ophelia?",
-    "options": ["Macbeth", "Hamlet", "Othello", "King Lear"],
+    "text": "Who painted the Mona Lisa?",
+    "options": ["Michelangelo", "Leonardo da Vinci", "Raphael", "Donatello"],
     "correctIndex": 1
   },
   {
     "id": 14,
-    "text": "What is the tallest mountain in the world?",
-    "options": ["K2", "Kangchenjunga", "Mount Everest", "Lhotse"],
-    "correctIndex": 2
+    "text": "What is the speed of light in vacuum?",
+    "options": ["300,000 kilometers per second", "150,000 kilometers per second", "500,000 kilometers per second", "200,000 kilometers per second"],
+    "correctIndex": 0
   },
   {
     "id": 15,
-    "text": "Which gas makes up the majority of Earth's atmosphere?",
-    "options": ["Oxygen", "Carbon dioxide", "Argon", "Nitrogen"],
-    "correctIndex": 3
+    "text": "Which band released the album 'The Dark Side of the Moon'?",
+    "options": ["The Beatles", "Pink Floyd", "Led Zeppelin", "Queen"],
+    "correctIndex": 1
   },
   {
     "id": 16,
-    "text": "In which city were the first modern Olympic Games held in 1896?",
-    "options": ["Rome", "Paris", "Athens", "London"],
-    "correctIndex": 2
+    "text": "In which year did the Berlin Wall fall?",
+    "options": ["1987", "1989", "1991", "1985"],
+    "correctIndex": 1
   },
   {
     "id": 17,
-    "text": "What is the currency of Japan?",
-    "options": ["Yuan", "Won", "Ringgit", "Yen"],
-    "correctIndex": 3
+    "text": "What is the capital of Japan?",
+    "options": ["Kyoto", "Osaka", "Tokyo", "Hiroshima"],
+    "correctIndex": 2
   },
   {
     "id": 18,
-    "text": "Which organ pumps blood through the human body?",
-    "options": ["Liver", "Lungs", "Kidney", "Heart"],
-    "correctIndex": 3
+    "text": "How many strings does a violin typically have?",
+    "options": ["6", "4", "5", "8"],
+    "correctIndex": 1
   },
   {
     "id": 19,
-    "text": "How many strings does a standard guitar have?",
-    "options": ["4", "5", "6", "7"],
+    "text": "What is the most spoken language in the world by native speakers?",
+    "options": ["English", "Spanish", "Mandarin Chinese", "Hindi"],
     "correctIndex": 2
   },
   {
     "id": 20,
-    "text": "What is the hardest natural substance on Earth?",
-    "options": ["Gold", "Iron", "Diamond", "Quartz"],
+    "text": "Which country invented pizza?",
+    "options": ["Greece", "Spain", "Italy", "France"],
     "correctIndex": 2
   }
 ]

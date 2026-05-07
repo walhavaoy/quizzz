@@ -3,36 +3,43 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-quizzz
   labels:
-    app: {{ .Release.Name }}-quizzz
+    app.kubernetes.io/name: quizzz
+    app.kubernetes.io/instance: {{ .Release.Name }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-quizzz
+      app.kubernetes.io/name: quizzz
+      app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-quizzz
+        app.kubernetes.io/name: quizzz
+        app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       containers:
-        - name: quizzz
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          ports:
-            - containerPort: 8080
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /api/questions
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-          readinessProbe:
-            httpGet:
-              path: /api/questions
-              port: 8080
-            initialDelaySeconds: 3
-            periodSeconds: 5
-          env:
-            - name: PORT
-              value: "8080"
+      - name: quizzz
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.service.port }}
+          protocol: TCP
+        {{- if .Values.probes.liveness.enabled }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.probes.liveness.path }}
+            port: {{ .Values.probes.liveness.port }}
+          initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
+          periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
+          failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
+        {{- end }}
+        {{- if .Values.probes.readiness.enabled }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.probes.readiness.path }}
+            port: {{ .Values.probes.readiness.port }}
+          initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
+          periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
+          failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
+        {{- end }}

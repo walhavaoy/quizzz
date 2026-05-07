@@ -1,20 +1,48 @@
-ARG BASE_IMAGE=node:22-alpine
+ARG BASE_IMAGE=node:22-slim
+ARG SLIM_IMAGE=node:22-slim
 
-FROM ${BASE_IMAGE} AS builder
+# ── Build stage ──────────────────────────────────────────────────────────────
+# node:22-slim includes Node.js + npm and is sufficient for pure TypeScript
+# compilation (no native module build tools required for this project).
+FROM ${BASE_IMAGE} AS build
+
 WORKDIR /app
-COPY package.json package-lock.json ./
+
+# Copy manifests first for layer caching (REQ-DK-10)
+COPY package*.json ./
+
 RUN npm ci
-COPY tsconfig.json tsconfig.client.json ./
-COPY src/ src/
-COPY client/ client/
-RUN npx tsc && npx tsc -p tsconfig.client.json
 
-FROM ${BASE_IMAGE}
+# Copy source files needed for both server and client compilation
+COPY tsconfig.json tsconfig.client.json ./
+COPY src/ ./src/
+COPY client/ ./client/
+COPY public/ ./public/
+
+# Compile server TypeScript → dist/
+RUN npx tsc
+
+# Compile client TypeScript → public/js/
+RUN npx tsc -p tsconfig.client.json
+
+# ── Runtime stage ─────────────────────────────────────────────────────────────
+FROM ${SLIM_IMAGE}
+
 WORKDIR /app
-COPY package.json package-lock.json ./
+
+# Copy manifests and install production-only dependencies
+COPY package*.json ./
 RUN npm ci --omit=dev
-COPY --from=builder /app/dist/ dist/
-COPY public/ public/
-COPY --from=builder /app/public/js/ public/js/
+
+# Create non-root user (REQ-DK-06)
+RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
+
+# Copy compiled server and static assets from build stage (REQ-DK-04)
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/public ./public
+
+USER appuser
+
 EXPOSE 8080
+
 CMD ["node", "dist/server.js"]
