@@ -5,6 +5,7 @@ import { WebSocketServer } from 'ws';
 import pino from 'pino';
 import cors from 'cors';
 import pinoHttp from 'pino-http';
+import apiRouter from './routes/api';
 
 const logger = pino({ name: 'quizzz' });
 
@@ -21,12 +22,14 @@ app.use(pinoHttp({ logger }));
 // REQ-SV-11: CORS headers — allow all origins
 app.use(cors());
 
+// REQ-SV-04: JSON body parsing for REST API routes
+app.use(express.json());
+
+// REQ-SV-04: Mount REST API router
+app.use('/api', apiRouter);
+
 // Serve static files from public/ — resolved relative to compiled output in dist/
 app.use(express.static(path.join(__dirname, '..', 'public')));
-
-// TODO: Mount REST API routes here once routes/api.ts is implemented:
-// import apiRouter from './routes/api';
-// app.use('/api', apiRouter);
 
 const server = http.createServer(app);
 
