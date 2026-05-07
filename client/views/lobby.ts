@@ -1,19 +1,20 @@
 // REQ-LB-01 through REQ-LB-07, REQ-LB-10, REQ-LB-11: Lobby view
 
 import type {
-  Player,
   JoinGameResponse,
   CreateGameResponse,
 } from '../../src/shared/types';
-import { WsClient } from '../ws-client';
-import { navigate } from '../router';
+import { WsClient } from '../ws-client.js';
+import { navigate } from '../router.js';
 
 // ─── Module state ─────────────────────────────────────────────────────────────
+
+type LobbyPlayer = { id: string; nickname: string; score: number };
 
 let gameId: string | null = null;
 let playerId: string | null = null;
 let isHost = false;
-let players: Player[] = [];
+let players: LobbyPlayer[] = [];
 
 const wsClient = new WsClient();
 
@@ -64,9 +65,9 @@ function renderPlayers(): void {
       .map((p, i) => {
         const initial = escapeHtml(p.nickname.charAt(0).toUpperCase());
         const name = escapeHtml(p.nickname);
-        const avatarClass = i === 0 ? 'host' : 'guest';
+        const avatarClass = (p.id === playerId && isHost) ? 'host' : 'guest';
         const hostBadge =
-          i === 0 ? '<span class="host-badge">Host</span>' : '';
+          (p.id === playerId && isHost) ? '<span class="host-badge">Host</span>' : '';
         return `<li class="player-item">
           <div class="player-avatar ${avatarClass}">${initial}</div>
           <span class="player-name">${name}</span>
@@ -167,16 +168,6 @@ async function handleJoin(): Promise<void> {
 
     // REQ-LB-03: Connect WebSocket for live updates
     wsClient.connect(gameId, playerId);
-
-    wsClient.on('player_joined', (msg) => {
-      players = msg.players;
-      renderPlayers();
-    });
-
-    // REQ-LB-06: Navigate to play view when game starts
-    wsClient.on('game_start', (_msg) => {
-      navigate('/play');
-    });
   } catch (err) {
     log.error('Join failed', { err });
     showError('Could not join game. Please try again.');
@@ -244,5 +235,16 @@ export function initLobby(): void {
     handleStart().catch((err: unknown) =>
       log.error('Unhandled start error', { err }),
     );
+  });
+
+  // REQ-LB-02: Update player list on new joins
+  wsClient.on('player_joined', (msg) => {
+    players = msg.players;
+    renderPlayers();
+  });
+
+  // REQ-LB-06: Navigate to play view when game starts
+  wsClient.on('game_start', (_msg) => {
+    navigate('/play');
   });
 }
