@@ -9,6 +9,11 @@ const logger = pino({ name: 'quizzz' });
 
 const app = express();
 
+// Health check endpoint (before middleware that could block it)
+app.get('/healthz', (_req, res) => {
+  res.json({ status: 'ok' });
+});
+
 app.use(express.json());
 
 // Serve static files from public/ — resolved relative to compiled output in dist/
