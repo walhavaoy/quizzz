@@ -17,3 +17,4 @@ created: 2026-05-07
 | REQ-HC-06   |        |       |
 | REQ-HC-07   |        |       |
 | REQ-HC-08   |        |       |
+| REQ-HC-11   | ✅ Done | `chart/templates/hpa.yaml` with `autoscaling/v2`; disabled by default (in-memory state caveat documented) |

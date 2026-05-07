@@ -1,0 +1,6 @@
+apiVersion: v2
+name: quizzz
+description: Multiplayer trivia quiz game
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
