@@ -7,10 +7,35 @@
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
-  <div id="app">
-    <h1>quizzz</h1>
-    <p>Loading...</p>
+  <div id="view-lobby" class="view active">
+    <div class="lobby-card">
+      <div class="lobby-title"><span>Q</span><span>u</span><span>i</span>zzz</div>
+      <p class="lobby-subtitle">Multiplayer Trivia</p>
+      <div class="form-group" id="lobby-form">
+        <input
+          class="nickname-input"
+          type="text"
+          placeholder="Enter your nickname..."
+          maxlength="20"
+          autocomplete="off"
+          data-testid="quizzz-input-nickname"
+        />
+        <div class="error-msg" id="lobby-error"></div>
+        <button class="btn-join" type="button" data-testid="quizzz-button-join">Join Game</button>
+      </div>
+      <div class="players-section" id="lobby-players">
+        <hr class="divider" />
+        <div class="players-header">
+          <span class="players-label">Players</span>
+          <span class="player-count" id="lobby-player-count">0</span>
+        </div>
+        <ul class="player-list" data-testid="quizzz-list-players"></ul>
+        <button class="btn-start" type="button" id="lobby-start-btn" data-testid="quizzz-button-start">Start Game</button>
+      </div>
+    </div>
   </div>
-  <script src="/js/main.js"></script>
+  <div id="view-play" class="view"></div>
+  <div id="view-result" class="view"></div>
+  <script type="module" src="/js/client/main.js"></script>
 </body>
 </html>

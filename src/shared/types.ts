@@ -61,6 +61,7 @@ export interface JoinGameRequest {
 export interface JoinGameResponse {
   playerId: string;
   gameId: string;
+  isHost: boolean;
   players: Player[];
 }
 

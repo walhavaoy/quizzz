@@ -1,0 +1,242 @@
+/* quizzz — global styles */
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #1a1a2e;
+  --surface: #16213e;
+  --accent: #7c3aed;
+  --teal: #14b8a6;
+  --yellow: #facc15;
+  --text: #e2e8f0;
+  --text-dim: #94a3b8;
+  --border: #334155;
+  --error: #ef4444;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+}
+
+/* ─── SPA views ─────────────────────────────────────────────────────────── */
+
+.view {
+  display: none;
+}
+
+.view.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+/* ─── Lobby card ─────────────────────────────────────────────────────────── */
+
+.lobby-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 2rem;
+  width: 100%;
+  max-width: 26rem;
+}
+
+.lobby-title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 0.25rem;
+  letter-spacing: 0.05em;
+}
+
+.lobby-title span:nth-child(1) { color: var(--accent); }
+.lobby-title span:nth-child(2) { color: var(--teal); }
+.lobby-title span:nth-child(3) { color: var(--yellow); }
+
+.lobby-subtitle {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ─── Join form ──────────────────────────────────────────────────────────── */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.nickname-input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  color: var(--text);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.nickname-input:focus {
+  border-color: var(--accent);
+}
+
+.nickname-input::placeholder {
+  color: var(--text-dim);
+}
+
+.error-msg {
+  color: var(--error);
+  font-size: 0.8rem;
+  display: none;
+}
+
+.error-msg.visible {
+  display: block;
+}
+
+.btn-join {
+  background: var(--accent);
+  color: var(--text);
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 2.75rem;
+  transition: opacity 0.2s;
+}
+
+.btn-join:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.btn-join:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ─── Players section ────────────────────────────────────────────────────── */
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5rem 0;
+}
+
+.players-section {
+  display: none;
+}
+
+.players-section.active {
+  display: block;
+}
+
+.players-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.players-label {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.player-count {
+  background: var(--teal);
+  color: var(--bg);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+}
+
+.player-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.player-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  background: var(--bg);
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+}
+
+.player-avatar {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: var(--bg);
+  flex-shrink: 0;
+}
+
+.player-avatar.host {
+  background: var(--yellow);
+}
+
+.player-avatar.guest {
+  background: var(--teal);
+}
+
+.player-name {
+  font-size: 0.9rem;
+}
+
+.host-badge {
+  font-size: 0.7rem;
+  color: var(--yellow);
+  margin-left: auto;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.btn-start {
+  background: var(--teal);
+  color: var(--bg);
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  width: 100%;
+  cursor: pointer;
+  min-height: 2.75rem;
+  margin-top: 1rem;
+  transition: opacity 0.2s;
+}
+
+.btn-start:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.btn-start:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
