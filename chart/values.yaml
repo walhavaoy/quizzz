@@ -29,10 +29,18 @@ autoscaling:
   maxReplicas: 3
   targetCPUUtilizationPercentage: 75
 
-resources:
-  requests:
-    cpu: 100m
-    memory: 128Mi
-  limits:
-    cpu: 500m
-    memory: 256Mi
+probes:
+  liveness:
+    enabled: true
+    path: /healthz
+    port: 8080
+    initialDelaySeconds: 10
+    periodSeconds: 15
+    failureThreshold: 3
+  readiness:
+    enabled: true
+    path: /healthz
+    port: 8080
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    failureThreshold: 3
