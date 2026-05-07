@@ -3,17 +3,20 @@ import path from 'path';
 import express from 'express';
 import { WebSocketServer } from 'ws';
 import pino from 'pino';
+import { router as apiRouter } from './routes/api.js';
 
 const logger = pino({ name: 'quizzz' });
 
 const app = express();
 
+// Parse JSON request bodies
+app.use(express.json());
+
 // Serve static files from public/ — resolved relative to compiled output in dist/
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
-// TODO: Mount REST API routes here once routes/api.ts is implemented:
-// import apiRouter from './routes/api';
-// app.use('/api', apiRouter);
+// REST API routes
+app.use('/api', apiRouter);
 
 const server = http.createServer(app);
 

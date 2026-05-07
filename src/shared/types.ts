@@ -67,3 +67,34 @@ export interface JoinGameResponse {
 export interface AnswerRequest {
   optionIndex: number;
 }
+
+export interface AnswerResponse {
+  correct: boolean;
+  score: number;
+}
+
+// ─── Public (client-facing) game state types ────────────────────────────────
+
+export interface PublicPlayer {
+  id: string;
+  nickname: string;
+  score: number;
+}
+
+/** Question shape sent to clients — correctIndex is omitted during 'playing' phase */
+export interface PublicQuestion {
+  text: string;
+  options: string[];
+}
+
+export interface PublicGameState {
+  id: string;
+  status: GameStatus;
+  players: PublicPlayer[];
+  currentRound: number;
+  totalRounds: number;
+  /** Current question, or null when in lobby/finished */
+  question: PublicQuestion | null;
+  /** Revealed only during 'reveal' phase; null otherwise */
+  correctAnswerIndex: number | null;
+}

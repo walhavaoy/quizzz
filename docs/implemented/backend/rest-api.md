@@ -15,3 +15,4 @@ created: 2026-05-07
 | REQ-RA-04   |        |       |
 | REQ-RA-05   |        |       |
 | REQ-RA-06   |        |       |
+| REQ-RA-10   | done   | GET /api/games/:id returns PublicGameState; correctAnswerIndex null during playing phase |
