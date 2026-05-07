@@ -1,6 +1,33 @@
-// Shared TypeScript types for quizzz — used by both server and client
+/**
+ * Shared TypeScript type definitions for quizzz.
+ *
+ * Used by both server (src/) and client (client/) code.
+ * Client code should use `import type { ... } from '../src/shared/types'` to
+ * avoid emitting unnecessary runtime references.
+ */
 
-export type GameStatus = 'lobby' | 'playing' | 'reveal' | 'finished';
+// ---------------------------------------------------------------------------
+// Game status
+// ---------------------------------------------------------------------------
+
+export enum GameStatus {
+  Lobby = 'lobby',
+  Playing = 'playing',
+  Reveal = 'reveal',
+  Finished = 'finished',
+}
+
+// ---------------------------------------------------------------------------
+// Core data shapes
+// ---------------------------------------------------------------------------
+
+export interface Question {
+  id: number;
+  text: string;
+  options: string[];
+  /** Only present on the server; not sent to clients in 'question' messages */
+  correctIndex?: number;
+}
 
 export interface Player {
   id: string;
@@ -11,14 +38,9 @@ export interface Player {
   disconnected?: boolean;
 }
 
-export interface Question {
-  id: number;
-  text: string;
-  options: string[];
-  /** Only present on the server; not sent to clients in 'question' messages */
-  correctIndex?: number;
-}
-
+/**
+ * In-memory game state (server-side).
+ */
 export interface GameState {
   id: string;
   status: GameStatus;
@@ -29,7 +51,9 @@ export interface GameState {
   hostId: string;
 }
 
-// ─── Server → Client WebSocket messages ─────────────────────────────────────
+// ---------------------------------------------------------------------------
+// WebSocket server → client messages
+// ---------------------------------------------------------------------------
 
 export type ServerMessage =
   | { type: 'player_joined'; player: Player; players: Player[] }
@@ -61,7 +85,9 @@ export interface GameStateSummary {
   hostId: string;
 }
 
-// ─── Client → Server WebSocket messages ─────────────────────────────────────
+// ---------------------------------------------------------------------------
+// WebSocket client → server messages
+// ---------------------------------------------------------------------------
 
 export type ClientMessage =
   | { type: 'answer'; optionIndex: number }
@@ -69,7 +95,9 @@ export type ClientMessage =
   /** Sent on reconnect to re-bind a known playerId to the new socket */
   | { type: 'reconnect'; gameId: string; playerId: string };
 
-// ─── Connection status (client-only) ────────────────────────────────────────
+// ---------------------------------------------------------------------------
+// Connection status (client-only)
+// ---------------------------------------------------------------------------
 
 export type ConnectionStatus = 'connecting' | 'connected' | 'disconnected' | 'reconnecting';
 
@@ -77,7 +105,9 @@ export type WsEventType = ServerMessage['type'] | 'status_change';
 // Narrowed event type for messages that carry player/game updates
 export type GameEventType = Exclude<WsEventType, 'status_change'>;
 
-// ─── API request/response types ─────────────────────────────────────────────
+// ---------------------------------------------------------------------------
+// REST API request / response types
+// ---------------------------------------------------------------------------
 
 export interface CreateGameResponse {
   gameId: string;
@@ -89,10 +119,17 @@ export interface JoinGameRequest {
 
 export interface JoinGameResponse {
   playerId: string;
-  gameId: string;
-  players: Player[];
 }
 
-export interface AnswerRequest {
-  optionIndex: number;
+export interface SubmitAnswerRequest {
+  playerId: string;
+  answerIndex: number;
+}
+
+export interface SubmitAnswerResponse {
+  accepted: boolean;
+}
+
+export interface ApiErrorResponse {
+  error: string;
 }

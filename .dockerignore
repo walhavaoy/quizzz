@@ -1,0 +1,10 @@
+node_modules
+.git
+docs
+*.md
+!README.md
+dist
+public/js
+.dockerignore
+Dockerfile
+chart
