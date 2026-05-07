@@ -1,107 +1,139 @@
-// REQ-RS-01/RS-02/RS-03/RS-04/RS-05/RS-11: Result view with podium and rankings
-import type { Player } from '../../src/shared/types';
-import { WsClient } from '../ws-client';
-
-interface RankedPlayer {
-  rank: number;
-  playerId: string;
-  nickname: string;
-  score: number;
-}
-
-function rankPlayers(players: Player[]): RankedPlayer[] {
-  const sorted = [...players].sort((a, b) => b.score - a.score);
-  return sorted.map((p, index) => ({
-    rank: index + 1,
-    playerId: p.id,
-    nickname: p.nickname,
-    score: p.score,
-  }));
-}
-
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-function buildPodiumBlock(ranked: RankedPlayer | undefined, place: 1 | 2 | 3): string {
-  if (!ranked) {
-    // Render an empty block so the layout stays consistent
-    const cls = place === 1 ? 'p1' : place === 2 ? 'p2' : 'p3';
-    return `<div class="podium-block ${cls}"></div>`;
-  }
-  const cls = place === 1 ? 'p1' : place === 2 ? 'p2' : 'p3';
-  return `
-    <div class="podium-block ${cls}">
-      <span class="rank">${place}</span>
-      <span class="nick">${escapeHtml(ranked.nickname)}</span>
-      <span class="pts">${ranked.score} pts</span>
-    </div>`.trim();
-}
-
-function buildPodium(rankings: RankedPlayer[]): string {
-  const first = rankings[0];
-  const second = rankings[1];
-  const third = rankings[2];
-
-  // Visual order: 2nd (left), 1st (centre, tallest), 3rd (right)
-  return `
-    <div class="podium" data-testid="quizzz-podium">
-      ${buildPodiumBlock(second, 2)}
-      ${buildPodiumBlock(first, 1)}
-      ${buildPodiumBlock(third, 3)}
-    </div>`.trim();
-}
-
-function buildRankingRow(ranked: RankedPlayer, currentPlayerId: string): string {
-  const isSelf = ranked.playerId === currentPlayerId;
-  const selfClass = isSelf ? ' self' : '';
-  const selfLabel = isSelf ? ' (you)' : '';
-  return `
-    <li class="rank-row${selfClass}">
-      <span class="rank-num">${ranked.rank}</span>
-      <span class="rank-nick">${escapeHtml(ranked.nickname)}${selfLabel}</span>
-      <span class="rank-score">${ranked.score}</span>
-    </li>`.trim();
-}
-
-function buildRankingsList(rankings: RankedPlayer[], currentPlayerId: string): string {
-  const rows = rankings.map((r) => buildRankingRow(r, currentPlayerId)).join('');
-  return `<ol class="rankings" data-testid="quizzz-list-rankings">${rows}</ol>`;
-}
+import type { Player } from '../../src/shared/types.js';
+import type { WsClient } from '../ws-client.js';
+import type { Router } from '../router.js';
+import type { GameSession } from '../session.js';
 
 /**
- * REQ-RS-01/RS-02/RS-03/RS-04/RS-05/RS-11: Render the result view.
- * @param players   Full player list from the game_over message (unsorted).
- * @param wsClient  Active WebSocket client — used to send play_again.
+ * Result view: podium, full rankings, and Play Again button.
+ *
+ * REQ-RS-01: Podium showing top 3 players (gold/silver/bronze blocks).
+ * REQ-RS-02: Full ranked list of all players.
+ * REQ-RS-03: Play Again button navigates back to lobby.
+ * REQ-RS-04: Player scores displayed.
+ * REQ-RS-05: Current player highlighted in rankings.
+ * REQ-RS-11: Current player's name labelled "(you)" in rankings.
  */
-export function showResultView(players: Player[], wsClient: WsClient): void {
-  const currentPlayerId = sessionStorage.getItem('quizzz_player_id') ?? '';
-  const rankings = rankPlayers(players);
+export class ResultView {
+  private el: HTMLElement;
+  private wsClient: WsClient;
+  private router: Router;
+  private session: GameSession;
 
-  const html = `
-    <div class="container">
-      <h1>Game Over!</h1>
-      ${buildPodium(rankings)}
-      ${buildRankingsList(rankings, currentPlayerId)}
-      <button class="btn-again" data-testid="quizzz-button-play-again">Play Again</button>
-    </div>`.trim();
+  constructor(
+    el: HTMLElement,
+    wsClient: WsClient,
+    router: Router,
+    session: GameSession,
+  ) {
+    this.el = el;
+    this.wsClient = wsClient;
+    this.router = router;
+    this.session = session;
 
-  const app = document.getElementById('app');
-  if (!app) return;
-  app.innerHTML = html;
+    router.register('/result', el, () => this.activate(), () => this.deactivate());
+  }
 
-  // REQ-RS-03: Play Again button — send play_again via WS; disable after first click
-  const btn = app.querySelector<HTMLButtonElement>('[data-testid="quizzz-button-play-again"]');
-  if (btn) {
-    btn.addEventListener('click', () => {
-      btn.disabled = true;
-      wsClient.send({ type: 'play_again' });
+  // ─── Router lifecycle ─────────────────────────────────────────────────────
+
+  private activate(): void {
+    const sorted = [...this.session.players].sort((a, b) => b.score - a.score);
+    this.render(sorted);
+  }
+
+  private deactivate(): void {
+    this.el.innerHTML = '';
+  }
+
+  // ─── Rendering ────────────────────────────────────────────────────────────
+
+  private render(sorted: Player[]): void {
+    const currentPlayerId = this.session.playerId;
+
+    this.el.innerHTML = `
+      <div class="container">
+        <h1>Game Over!</h1>
+        ${this.renderPodium(sorted)}
+        <ol class="rankings" data-testid="quizzz-list-rankings">
+          ${sorted.map((p, i) => this.renderRankRow(p, i + 1, currentPlayerId)).join('')}
+        </ol>
+        <button class="btn-again" data-testid="quizzz-button-play-again">Play Again</button>
+      </div>
+    `;
+
+    const btn = this.el.querySelector<HTMLButtonElement>('[data-testid="quizzz-button-play-again"]');
+    btn?.addEventListener('click', () => {
+      if (btn) btn.disabled = true;
+      void this.handlePlayAgain();
     });
   }
 
+  private renderPodium(sorted: Player[]): string {
+    const first = sorted[0];
+    const second = sorted[1];
+    const third = sorted[2];
+
+    // Visual order: 2nd (left), 1st (centre/tallest), 3rd (right)
+    return `
+      <div class="podium" data-testid="quizzz-podium">
+        ${this.renderPodiumBlock(second, 2)}
+        ${this.renderPodiumBlock(first, 1)}
+        ${this.renderPodiumBlock(third, 3)}
+      </div>
+    `;
+  }
+
+  private renderPodiumBlock(player: Player | undefined, place: 1 | 2 | 3): string {
+    const cls = place === 1 ? 'p1' : place === 2 ? 'p2' : 'p3';
+    if (!player) {
+      return `<div class="podium-block ${cls}"></div>`;
+    }
+    return `
+      <div class="podium-block ${cls}">
+        <span class="rank">${place}</span>
+        <span class="nick">${this.escapeHtml(player.nickname)}</span>
+        <span class="pts">${player.score} pts</span>
+      </div>
+    `;
+  }
+
+  private renderRankRow(player: Player, position: number, currentPlayerId: string): string {
+    const isSelf = player.id === currentPlayerId;
+    const selfClass = isSelf ? ' self' : '';
+    const selfLabel = isSelf ? ' (you)' : '';
+    return `
+      <li class="rank-row${selfClass}">
+        <span class="rank-num">${position}</span>
+        <span class="rank-nick">${this.escapeHtml(player.nickname)}${selfLabel}</span>
+        <span class="rank-score">${player.score}</span>
+      </li>
+    `;
+  }
+
+  // ─── Actions ──────────────────────────────────────────────────────────────
+
+  private async handlePlayAgain(): Promise<void> {
+    // Reset session
+    this.session.gameId = '';
+    this.session.playerId = '';
+    this.session.isHost = false;
+    this.session.players = [];
+
+    // Disconnect WebSocket
+    this.wsClient.disconnect();
+
+    // Navigate back to lobby (clear gameId from URL)
+    history.replaceState({ path: '/' }, '', '/');
+    this.router.navigate('/');
+  }
+
+  // ─── Utility ──────────────────────────────────────────────────────────────
+
+  private escapeHtml(str: string): string {
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
 }

@@ -1,59 +1,36 @@
-// Frontend entry point for quizzz SPA
-import { WsClient } from './ws-client';
-import { initRouter, registerRoute, navigate } from './router';
-import { showLobbyView } from './views/lobby';
-import { showPlayView } from './views/play';
-import { showResultView } from './views/result';
+import { WsClient } from './ws-client.js';
+import { Router } from './router.js';
+import { LobbyView } from './views/lobby.js';
+import { PlayView } from './views/play.js';
+import { ResultView } from './views/result.js';
+import type { GameSession } from './session.js';
 
 const wsClient = new WsClient();
+const router = new Router();
 
-// Retrieve stored session context (set after join)
-function getSession(): { gameId: string; playerId: string } | null {
-  const gameId = sessionStorage.getItem('quizzz_game_id');
-  const playerId = sessionStorage.getItem('quizzz_player_id');
-  if (!gameId || !playerId) return null;
-  return { gameId, playerId };
-}
+/** Shared mutable game session state. Views read/write this object. */
+const session: GameSession = {
+  gameId: '',
+  playerId: '',
+  isHost: false,
+  players: [],
+};
 
-// Transition all players to play view when the game starts
-wsClient.on('game_start', () => {
-  navigate('/play');
+// Update the persistent connection dot on status changes
+const dot = document.getElementById('connection-dot');
+wsClient.on('status_change', ({ status }) => {
+  if (!dot) return;
+  dot.className = `connection-dot ${status === 'connected' ? 'connected' : 'disconnected'}`;
 });
 
-// Transition all players to result view when the game ends
-wsClient.on('game_over', (msg) => {
-  showResultView(msg.players, wsClient);
-});
+// Mount views — each registers itself with the router in its constructor
+const lobbyEl = document.getElementById('view-lobby') as HTMLElement;
+const playEl = document.getElementById('view-play') as HTMLElement;
+const resultEl = document.getElementById('view-result') as HTMLElement;
 
-// REQ-RS-03: Navigate back to lobby when server confirms reset (registered once at module level
-// to prevent listener accumulation across multiple game cycles)
-wsClient.on('back_to_lobby', () => {
-  navigate('/');
-});
+new LobbyView(lobbyEl, wsClient, router, session);
+new PlayView(playEl, wsClient, router, session);
+new ResultView(resultEl, wsClient, router, session);
 
-// Register routes
-registerRoute('/', () => {
-  showLobbyView();
-});
-
-registerRoute('/play', () => {
-  const session = getSession();
-  if (!session) {
-    navigate('/');
-    return;
-  }
-  showPlayView();
-});
-
-registerRoute('/result', () => {
-  // Result view is shown directly by the game_over handler above;
-  // this route entry is a no-op placeholder for direct navigation.
-});
-
-// Connect WS if session already exists (e.g. page refresh mid-game)
-const existingSession = getSession();
-if (existingSession) {
-  wsClient.connect(existingSession.gameId, existingSession.playerId);
-}
-
-initRouter();
+// Start the router after all views are registered
+router.init();

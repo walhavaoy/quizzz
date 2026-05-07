@@ -1,64 +1,386 @@
-/* quizzz — global styles */
-
-/* ─── Custom properties ─────────────────────────────────────────────────── */
+/* ── Custom Properties ──────────────────────────────────────────────────── */
 :root {
   --bg: #1a1a2e;
-  --surface: #2a2a4a;
-  --accent: #7c3aed;
-  --accent-hover: #6d28d9;
+  --surface: #16213e;
+  --border: #1f3460;
+  --purple: #7c3aed;
   --teal: #14b8a6;
   --yellow: #facc15;
-  --text: #f0f0f0;
-  --text-dim: #888888;
-
-  /* Podium colours */
-  --gold: #facc15;
-  --silver: #c0c0c0;
-  --bronze: #cd7f32;
-
-  /* Spacing */
-  --radius: 0.5rem;
+  --error: #ef4444;
+  --text: #e2e8f0;
+  --text-dim: #94a3b8;
 }
 
-/* ─── Reset & base ──────────────────────────────────────────────────────── */
+/* ── Reset & Base ───────────────────────────────────────────────────────── */
 *,
 *::before,
 *::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Segoe UI', system-ui, sans-serif;
-  display: flex;
-  justify-content: center;
-  padding: 2rem 1rem;
+  font-family: system-ui, -apple-system, sans-serif;
   min-height: 100vh;
+  line-height: 1.5;
 }
 
+/* ── App Header ─────────────────────────────────────────────────────────── */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.app-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--yellow);
+  letter-spacing: -0.02em;
+}
+
+/* ── Main Layout ────────────────────────────────────────────────────────── */
 #app {
-  width: 100%;
+  max-width: 38rem;
+  margin: 0 auto;
+  padding: 1.5rem;
 }
 
-/* ─── Container ─────────────────────────────────────────────────────────── */
+/* ── Result View Container ──────────────────────────────────────────────── */
 .container {
   max-width: 32rem;
   width: 100%;
   margin: 0 auto;
 }
 
-/* ─── Page heading ──────────────────────────────────────────────────────── */
-h1 {
-  text-align: center;
-  font-size: 1.8rem;
-  margin-bottom: 2rem;
-  color: var(--text);
+/* ── View System ────────────────────────────────────────────────────────── */
+.hidden {
+  display: none !important;
 }
 
-/* ─── Podium (REQ-RS-01) ────────────────────────────────────────────────── */
+.view-active {
+  animation: bounceIn 0.5s ease-out;
+}
+
+/* ── Card / Surface ─────────────────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* ── Typography ─────────────────────────────────────────────────────────── */
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--yellow);
+  text-align: center;
+}
+
+h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.text-dim {
+  color: var(--text-dim);
+}
+
+/* ── Buttons ────────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background-color 0.15s ease,
+    box-shadow 0.2s ease;
+  color: #fff;
+  min-height: 2.75rem;
+  user-select: none;
+}
+
+.btn:hover:not(:disabled) {
+  transform: scale(1.06);
+  box-shadow: 0 0.25rem 1rem rgba(124, 58, 237, 0.3);
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--purple);
+  width: 100%;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #6d28d9;
+}
+
+/* ── Answer Buttons ─────────────────────────────────────────────────────── */
+.btn-answer {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  color: var(--text);
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 0.5rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 0.15s ease;
+  min-height: 2.75rem;
+}
+
+.btn-answer:hover:not(:disabled) {
+  border-color: var(--purple);
+  transform: scale(1.02);
+}
+
+.btn-answer.selected {
+  border-color: var(--purple);
+  background: rgba(124, 58, 237, 0.12);
+}
+
+/* REQ-ST-10: answer feedback animations */
+.btn-answer.correct {
+  animation: correctBounce 0.7s ease-out forwards;
+  border-color: var(--teal);
+}
+
+.btn-answer.wrong {
+  animation: wrongShake 0.6s ease-out forwards;
+  border-color: var(--error);
+}
+
+.btn-answer:disabled {
+  cursor: not-allowed;
+}
+
+/* ── Form Inputs ────────────────────────────────────────────────────────── */
+.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 0.5rem;
+  color: var(--text);
+  font-size: 1rem;
+  transition: border-color 0.15s ease;
+  margin-bottom: 0.75rem;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--purple);
+}
+
+.form-input::placeholder {
+  color: var(--text-dim);
+}
+
+/* ── Player List ────────────────────────────────────────────────────────── */
+.player-list {
+  list-style: none;
+  margin-bottom: 1rem;
+}
+
+.player-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.95rem;
+}
+
+.player-list li:last-child {
+  border-bottom: none;
+}
+
+.host-badge {
+  font-size: 0.7rem;
+  color: var(--yellow);
+  border: 1px solid var(--yellow);
+  border-radius: 999px;
+  padding: 0.1rem 0.4rem;
+  opacity: 0.85;
+}
+
+/* ── Timer ──────────────────────────────────────────────────────────────── */
+.timer {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  padding: 0.25rem;
+  color: var(--text);
+  transition: color 0.3s ease;
+}
+
+.timer.urgent {
+  color: var(--error);
+}
+
+.timer-bar {
+  height: 0.35rem;
+  background: var(--border);
+  border-radius: 0.2rem;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.timer-bar-fill {
+  height: 100%;
+  background: var(--teal);
+  border-radius: 0.2rem;
+  transition: width 0.9s linear, background-color 0.3s ease;
+}
+
+.timer-bar-fill.urgent {
+  background: var(--error);
+}
+
+/* ── Score ──────────────────────────────────────────────────────────────── */
+.score {
+  font-size: 2rem;
+  font-weight: 700;
+  display: inline-block;
+}
+
+/* REQ-ST-10: score pop animation */
+.score.pop {
+  animation: scoreBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ── Waiting / Loading Indicators (REQ-ST-11) ───────────────────────────── */
+.waiting-dots {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.waiting-dots span {
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+  background: var(--purple);
+  animation: dotBounce 0.6s infinite ease-in-out;
+}
+
+.waiting-dots span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.waiting-dots span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.waiting-label {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.question-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2.5rem 1rem;
+}
+
+/* ── Connection Status Dot ──────────────────────────────────────────────── */
+.connection-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  vertical-align: middle;
+}
+
+.connection-dot.connected {
+  background: var(--teal);
+  box-shadow: 0 0 0.4rem var(--teal);
+}
+
+.connection-dot.disconnected {
+  background: var(--error);
+  box-shadow: 0 0 0.4rem var(--error);
+}
+
+/* ── Round / Question Header ────────────────────────────────────────────── */
+.round-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.round-label {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+.score-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.score-label {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+/* ── Reveal Banner ──────────────────────────────────────────────────────── */
+.reveal-banner {
+  text-align: center;
+  padding: 0.65rem 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.reveal-banner.correct {
+  background: rgba(20, 184, 166, 0.12);
+  border: 1px solid var(--teal);
+  color: var(--teal);
+}
+
+.reveal-banner.wrong {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid var(--error);
+  color: var(--error);
+}
+
+/* ── Podium (REQ-RS-01) ─────────────────────────────────────────────────── */
 .podium {
   display: flex;
   align-items: flex-end;
@@ -74,7 +396,7 @@ h1 {
   align-items: center;
   justify-content: flex-end;
   width: 7rem;
-  border-radius: var(--radius) var(--radius) 0 0;
+  border-radius: 0.5rem 0.5rem 0 0;
   padding: 1rem 0.5rem;
   color: #1a1a2e;
   font-weight: 700;
@@ -100,30 +422,29 @@ h1 {
   opacity: 0.8;
 }
 
-/* CSS order controls left-centre-right visual placement */
-.p1 {
+.podium-block.p1 {
   height: 10rem;
-  background: var(--gold);
+  background: #facc15;
   order: 2;
 }
 
-.p2 {
+.podium-block.p2 {
   height: 7rem;
-  background: var(--silver);
+  background: #c0c0c0;
   order: 1;
 }
 
-.p3 {
+.podium-block.p3 {
   height: 5rem;
-  background: var(--bronze);
+  background: #cd7f32;
   order: 3;
 }
 
-/* ─── Rankings list (REQ-RS-02/RS-11) ──────────────────────────────────── */
+/* ── Rankings List (REQ-RS-02/05/11) ────────────────────────────────────── */
 .rankings {
   list-style: none;
-  border: 1px solid var(--surface);
-  border-radius: var(--radius);
+  border: 1px solid #2a2a4a;
+  border-radius: 0.5rem;
   overflow: hidden;
   margin-bottom: 2rem;
 }
@@ -132,7 +453,7 @@ h1 {
   display: flex;
   align-items: center;
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--surface);
+  border-bottom: 1px solid #2a2a4a;
   gap: 1rem;
 }
 
@@ -144,10 +465,9 @@ h1 {
   background: rgba(255, 255, 255, 0.03);
 }
 
-/* REQ-RS-11: Highlight current player */
 .rank-row.self {
   background: rgba(124, 58, 237, 0.15);
-  border-left: 3px solid var(--accent);
+  border-left: 3px solid #7c3aed;
 }
 
 .rank-num {
@@ -155,7 +475,7 @@ h1 {
   font-size: 1.1rem;
   width: 2rem;
   text-align: center;
-  color: var(--text-dim);
+  color: #888;
 }
 
 .rank-nick {
@@ -169,15 +489,15 @@ h1 {
   font-size: 0.95rem;
 }
 
-/* ─── Play Again button (REQ-RS-03) ─────────────────────────────────────── */
+/* ── Play Again Button ──────────────────────────────────────────────────── */
 .btn-again {
   display: block;
   width: 100%;
   padding: 0.9rem;
-  background: var(--accent);
-  color: var(--text);
+  background: var(--purple);
+  color: #fff;
   border: none;
-  border-radius: var(--radius);
+  border-radius: 0.5rem;
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
@@ -185,8 +505,8 @@ h1 {
   transition: background 0.2s;
 }
 
-.btn-again:hover {
-  background: var(--accent-hover);
+.btn-again:hover:not(:disabled) {
+  background: #6d28d9;
 }
 
 .btn-again:disabled {
@@ -194,29 +514,150 @@ h1 {
   cursor: not-allowed;
 }
 
-/* ─── Mobile responsive (down to 360px) ────────────────────────────────── */
-@media (max-width: 360px) {
-  body {
-    padding: 1rem 0.5rem;
-  }
+/* ── Lobby Specific ─────────────────────────────────────────────────────── */
+.lobby-hero {
+  text-align: center;
+  padding: 1.5rem 0 1rem;
+}
 
-  h1 {
-    font-size: 1.4rem;
-  }
+.lobby-hero h1 {
+  margin-bottom: 0.25rem;
+}
 
-  .podium-block {
-    width: 5.5rem;
-  }
+.lobby-hero p {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
 
-  .podium-block .rank {
-    font-size: 1.5rem;
-  }
+.lobby-player-count {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-bottom: 0.5rem;
+}
 
-  .podium-block .nick {
-    font-size: 0.75rem;
-  }
+/* ── Keyframe Animations ─────────────────────────────────────────────────── */
 
-  .rank-row {
-    padding: 0.6rem 0.75rem;
+/* REQ-ST-10: View bounce-in transition */
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: translateY(1.5rem) scale(0.95);
+  }
+  60% {
+    transform: translateY(-0.3rem) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* REQ-ST-10: Correct answer bounce */
+@keyframes correctBounce {
+  0% {
+    background: var(--teal);
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(20, 184, 166, 0.5);
+  }
+  30% {
+    transform: scale(1.05);
+  }
+  60% {
+    transform: scale(0.98);
+  }
+  100% {
+    background: var(--surface);
+    transform: scale(1);
+    box-shadow: 0 0 0 0.5rem rgba(20, 184, 166, 0);
+  }
+}
+
+/* REQ-ST-10: Wrong answer shake */
+@keyframes wrongShake {
+  0% {
+    background: var(--error);
+    transform: translateX(0);
+  }
+  15% {
+    transform: translateX(-0.4rem);
+  }
+  30% {
+    transform: translateX(0.4rem);
+  }
+  45% {
+    transform: translateX(-0.3rem);
+  }
+  60% {
+    transform: translateX(0.2rem);
+  }
+  75% {
+    transform: translateX(-0.1rem);
+  }
+  100% {
+    background: var(--surface);
+    transform: translateX(0);
+  }
+}
+
+/* REQ-ST-10: Score increment bounce */
+@keyframes scoreBounce {
+  0% {
+    transform: scale(1);
+    color: var(--text);
+  }
+  25% {
+    transform: scale(1.5);
+    color: var(--yellow);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  75% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+    color: var(--text);
+  }
+}
+
+/* REQ-ST-11: Waiting dots bounce */
+@keyframes dotBounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-0.6rem);
+  }
+}
+
+/* REQ-RS-10: Podium bar squash-and-stretch entrance */
+@keyframes podiumBounce {
+  0% {
+    transform: translateY(4rem) scaleY(0.5);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(-0.5rem) scaleY(1.05);
+    opacity: 1;
+  }
+  80% {
+    transform: translateY(0.15rem) scaleY(0.98);
+  }
+  100% {
+    transform: translateY(0) scaleY(1);
+    opacity: 1;
+  }
+}
+
+/* ── Accessibility: prefers-reduced-motion ─────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

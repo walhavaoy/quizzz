@@ -7,10 +7,19 @@
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
-  <div id="app">
-    <h1>quizzz</h1>
-    <p>Loading...</p>
-  </div>
-  <script src="/js/client/main.js" type="module"></script>
+  <header class="app-header">
+    <span class="app-title">quizzz</span>
+    <span
+      id="connection-dot"
+      class="connection-dot disconnected"
+      data-testid="quizzz-indicator-connection"
+    ></span>
+  </header>
+  <main id="app">
+    <div id="view-lobby" class="view"></div>
+    <div id="view-play" class="view hidden"></div>
+    <div id="view-result" class="view hidden"></div>
+  </main>
+  <script type="module" src="/js/client/main.js"></script>
 </body>
 </html>
