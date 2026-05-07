@@ -55,6 +55,7 @@ export interface PlayerJoinedMessage {
   type: 'player_joined';
   playerId: string;
   nickname: string;
+  hostId: string;
   players: Array<{ id: string; nickname: string; score: number }>;
 }
 
@@ -152,6 +153,7 @@ export interface JoinGameResponse {
   playerId: string;
   gameId: string;
   isHost: boolean;
+  hostId: string;
   players: Player[];
 }
 

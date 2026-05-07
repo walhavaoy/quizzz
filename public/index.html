@@ -18,9 +18,10 @@
           placeholder="Enter your nickname..."
           maxlength="20"
           autocomplete="off"
+          aria-label="Enter your nickname"
           data-testid="quizzz-input-nickname"
         />
-        <div class="error-msg" id="lobby-error"></div>
+        <div class="error-msg" id="lobby-error" aria-live="polite"></div>
         <button class="btn-join" type="button" data-testid="quizzz-button-join">Join Game</button>
       </div>
       <div class="players-section" id="lobby-players">
@@ -30,7 +31,7 @@
           <span class="player-count" id="lobby-player-count">0</span>
         </div>
         <ul class="player-list" data-testid="quizzz-list-players"></ul>
-        <button class="btn-start" type="button" id="lobby-start-btn" data-testid="quizzz-button-start">Start Game</button>
+        <button class="btn-start" type="button" id="lobby-start-btn" aria-hidden="true" data-testid="quizzz-button-start">Start Game</button>
       </div>
     </div>
   </div>

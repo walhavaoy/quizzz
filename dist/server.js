@@ -11,6 +11,7 @@ const ws_1 = require("ws");
 const pino_1 = __importDefault(require("pino"));
 const cors_1 = __importDefault(require("cors"));
 const pino_http_1 = __importDefault(require("pino-http"));
+const api_js_1 = require("./routes/api.js");
 const logger = (0, pino_1.default)({ name: 'quizzz' });
 const app = (0, express_1.default)();
 exports.app = app;
@@ -22,11 +23,12 @@ app.get('/healthz', (_req, res) => {
 app.use((0, pino_http_1.default)({ logger }));
 // REQ-SV-11: CORS headers — allow all origins
 app.use((0, cors_1.default)());
+// Parse JSON request bodies for API routes
+app.use(express_1.default.json());
+// Mount REST API routes
+app.use('/api', api_js_1.apiRouter);
 // Serve static files from public/ — resolved relative to compiled output in dist/
 app.use(express_1.default.static(path_1.default.join(__dirname, '..', 'public')));
-// TODO: Mount REST API routes here once routes/api.ts is implemented:
-// import apiRouter from './routes/api';
-// app.use('/api', apiRouter);
 const server = http_1.default.createServer(app);
 exports.server = server;
 const wss = new ws_1.WebSocketServer({ noServer: true });

@@ -14,6 +14,7 @@ type LobbyPlayer = { id: string; nickname: string; score: number };
 let gameId: string | null = null;
 let playerId: string | null = null;
 let isHost = false;
+let hostId: string | null = null;
 let players: LobbyPlayer[] = [];
 
 const wsClient = new WsClient();
@@ -62,12 +63,12 @@ function renderPlayers(): void {
 
   if (list) {
     list.innerHTML = players
-      .map((p, i) => {
+      .map((p) => {
         const initial = escapeHtml(p.nickname.charAt(0).toUpperCase());
         const name = escapeHtml(p.nickname);
-        const avatarClass = (p.id === playerId && isHost) ? 'host' : 'guest';
+        const avatarClass = (p.id === hostId) ? 'host' : 'guest';
         const hostBadge =
-          (p.id === playerId && isHost) ? '<span class="host-badge">Host</span>' : '';
+          (p.id === hostId) ? '<span class="host-badge">Host</span>' : '';
         return `<li class="player-item">
           <div class="player-avatar ${avatarClass}">${initial}</div>
           <span class="player-name">${name}</span>
@@ -146,6 +147,7 @@ async function handleJoin(): Promise<void> {
 
     playerId = joinData.playerId;
     isHost = joinData.isHost;
+    hostId = joinData.hostId;
     players = joinData.players;
 
     // Show player list, hide join form
@@ -161,6 +163,7 @@ async function handleJoin(): Promise<void> {
     // REQ-LB-04: Start button only for host
     if (startBtn) {
       startBtn.style.display = isHost ? '' : 'none';
+      startBtn.setAttribute('aria-hidden', isHost ? 'false' : 'true');
     }
 
     renderPlayers();
@@ -239,6 +242,7 @@ export function initLobby(): void {
 
   // REQ-LB-02: Update player list on new joins
   wsClient.on('player_joined', (msg) => {
+    hostId = msg.hostId;
     players = msg.players;
     renderPlayers();
   });
