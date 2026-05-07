@@ -1,0 +1,28 @@
+{
+  "name": "quizzz",
+  "version": "0.1.0",
+  "description": "Multiplayer real-time trivia quiz game",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc && tsc -p tsconfig.client.json",
+    "build:server": "tsc",
+    "build:client": "tsc -p tsconfig.client.json",
+    "start": "node dist/server.js",
+    "dev": "ts-node src/server.ts"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "pino": "^9.5.0",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.0.0",
+    "@types/ws": "^8.5.13",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
