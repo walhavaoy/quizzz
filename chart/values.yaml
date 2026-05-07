@@ -12,9 +12,17 @@ service:
 ingress:
   enabled: true
   className: ""
-  annotations: {}
+  annotations:
+    # WebSocket support annotations for nginx ingress controller
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.org/websocket-services: "quizzz"
   hosts:
     - host: quizzz.tmpclaw.io
+      paths:
+        - path: /
+          pathType: Prefix
+    - host: shell.quizzz.tmpclaw.io
       paths:
         - path: /
           pathType: Prefix
