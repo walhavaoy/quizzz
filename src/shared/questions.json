@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "text": "What is the chemical symbol for gold?",
+    "options": ["Au", "Go", "Gd", "Ag"],
+    "correctIndex": 0
+  },
+  {
+    "id": 2,
+    "text": "Which planet is known as the Red Planet?",
+    "options": ["Venus", "Mars", "Jupiter", "Saturn"],
+    "correctIndex": 1
+  },
+  {
+    "id": 3,
+    "text": "In what year did the Titanic sink?",
+    "options": ["1913", "1912", "1915", "1910"],
+    "correctIndex": 1
+  },
+  {
+    "id": 4,
+    "text": "What is the capital of France?",
+    "options": ["Marseille", "Lyon", "Paris", "Nice"],
+    "correctIndex": 2
+  },
+  {
+    "id": 5,
+    "text": "Who directed the film 'Inception'?",
+    "options": ["Steven Spielberg", "Christopher Nolan", "James Cameron", "Quentin Tarantino"],
+    "correctIndex": 1
+  },
+  {
+    "id": 6,
+    "text": "What is the largest mammal in the world?",
+    "options": ["African Elephant", "Giraffe", "Blue Whale", "Hippopotamus"],
+    "correctIndex": 2
+  },
+  {
+    "id": 7,
+    "text": "In which country are the pyramids of Giza located?",
+    "options": ["Sudan", "Libya", "Egypt", "Saudi Arabia"],
+    "correctIndex": 2
+  },
+  {
+    "id": 8,
+    "text": "Who wrote 'Pride and Prejudice'?",
+    "options": ["Charlotte Brontë", "Emily Dickinson", "Jane Austen", "George Eliot"],
+    "correctIndex": 2
+  },
+  {
+    "id": 9,
+    "text": "What is the smallest country in the world?",
+    "options": ["Monaco", "San Marino", "Vatican City", "Liechtenstein"],
+    "correctIndex": 2
+  },
+  {
+    "id": 10,
+    "text": "Which element has the atomic number 1?",
+    "options": ["Helium", "Oxygen", "Hydrogen", "Carbon"],
+    "correctIndex": 2
+  },
+  {
+    "id": 11,
+    "text": "In which sport would you find a 'home run'?",
+    "options": ["Tennis", "Baseball", "Cricket", "Golf"],
+    "correctIndex": 1
+  },
+  {
+    "id": 12,
+    "text": "What is the longest river in the world?",
+    "options": ["Amazon", "Yangtze", "Nile", "Mississippi"],
+    "correctIndex": 2
+  },
+  {
+    "id": 13,
+    "text": "Who painted the Mona Lisa?",
+    "options": ["Michelangelo", "Leonardo da Vinci", "Raphael", "Donatello"],
+    "correctIndex": 1
+  },
+  {
+    "id": 14,
+    "text": "What is the speed of light in vacuum?",
+    "options": ["300,000 kilometers per second", "150,000 kilometers per second", "500,000 kilometers per second", "200,000 kilometers per second"],
+    "correctIndex": 0
+  },
+  {
+    "id": 15,
+    "text": "Which band released the album 'The Dark Side of the Moon'?",
+    "options": ["The Beatles", "Pink Floyd", "Led Zeppelin", "Queen"],
+    "correctIndex": 1
+  },
+  {
+    "id": 16,
+    "text": "In which year did the Berlin Wall fall?",
+    "options": ["1987", "1989", "1991", "1985"],
+    "correctIndex": 1
+  },
+  {
+    "id": 17,
+    "text": "What is the capital of Japan?",
+    "options": ["Kyoto", "Osaka", "Tokyo", "Hiroshima"],
+    "correctIndex": 2
+  },
+  {
+    "id": 18,
+    "text": "How many strings does a violin typically have?",
+    "options": ["6", "4", "5", "8"],
+    "correctIndex": 1
+  },
+  {
+    "id": 19,
+    "text": "What is the most spoken language in the world by native speakers?",
+    "options": ["English", "Spanish", "Mandarin Chinese", "Hindi"],
+    "correctIndex": 2
+  },
+  {
+    "id": 20,
+    "text": "Which country invented pizza?",
+    "options": ["Greece", "Spain", "Italy", "France"],
+    "correctIndex": 2
+  }
+]

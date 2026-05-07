@@ -2,7 +2,7 @@
 component: questions
 area: data
 priority: P0
-status: planned
+status: implemented
 created: 2026-05-07
 ---
 
@@ -17,7 +17,7 @@ Provide a static JSON file with 20 trivia questions used by the game engine. Eac
 ## Requirements
 
 ### Core
-- REQ-QS-01: 20 questions in a JSON file at `src/data/questions.json` [priority: must]
+- REQ-QS-01: 20 questions in a JSON file at `src/shared/questions.json` [priority: must]
 - REQ-QS-02: Each question has: id, text, 4 options array, correctIndex (0-3) [priority: must]
 - REQ-QS-03: Questions are general knowledge, suitable for a wide audience [priority: must]
 - REQ-QS-04: All correct answers are verified and accurate [priority: must]
