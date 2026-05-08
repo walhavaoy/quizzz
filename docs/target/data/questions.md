@@ -2,37 +2,51 @@
 component: questions
 area: data
 priority: P0
-status: implemented
-created: 2026-05-07
+status: planned
+created: 2026-05-08
 ---
 
-# Questions
+# Question Pool
 
-> Hard-coded pool of 20 general knowledge trivia questions.
+> 30 hard-coded trivia questions stored as JSON, organized by category.
 
 ## Purpose
 
-Provide a static JSON file with 20 trivia questions used by the game engine. Each game randomly selects 5 questions from this pool.
+Static question data that the REST API serves. 10 questions per category, 3 categories total.
 
 ## Requirements
 
 ### Core
-- REQ-QS-01: 20 questions in a JSON file at `src/shared/questions.json` [priority: must]
-- REQ-QS-02: Each question has: id, text, 4 options array, correctIndex (0-3) [priority: must]
-- REQ-QS-03: Questions are general knowledge, suitable for a wide audience [priority: must]
-- REQ-QS-04: All correct answers are verified and accurate [priority: must]
+- REQ-QS-01: 30 total questions stored in a JSON file [priority: must]
+- REQ-QS-02: 10 questions for "General Knowledge" (id: general-knowledge) [priority: must]
+- REQ-QS-03: 10 questions for "Science" (id: science) [priority: must]
+- REQ-QS-04: 10 questions for "Movies" (id: movies) [priority: must]
+- REQ-QS-05: Each question has: question text, 4 options, correct_index (0-3) [priority: must]
+- REQ-QS-06: Questions are factually correct and unambiguous [priority: must]
 
-### Extended
-- REQ-QS-10: Questions span diverse categories (science, history, geography, etc.) [priority: should]
+## Data Format
+
+```json
+{
+  "general-knowledge": [
+    {
+      "question": "What is the capital of France?",
+      "options": ["London", "Berlin", "Paris", "Madrid"],
+      "correct_index": 2
+    }
+  ],
+  "science": [...],
+  "movies": [...]
+}
+```
 
 ## Acceptance Criteria
 
 - JSON file parses without error
-- Contains exactly 20 question objects
-- Each question has 4 non-empty options
-- correctIndex is 0, 1, 2, or 3 for each question
-- No duplicate questions
+- Each category has exactly 10 questions
+- Each question has exactly 4 options
+- correct_index is 0, 1, 2, or 3 for every question
 
 ## Dependencies
 
-None — leaf component.
+None (leaf data file)

@@ -2,15 +2,15 @@
 component: router
 area: frontend
 coverage: 0%
-created: 2026-05-07
+created: 2026-05-08
 ---
 
-# Router — Implementation Status
+# Hash Router — Implementation Status
 
-| Requirement | Status | Notes |
-|-------------|--------|-------|
-| REQ-RT-01   |        |       |
-| REQ-RT-02   |        |       |
-| REQ-RT-03   |        |       |
-| REQ-RT-04   |        |       |
-| REQ-RT-05   |        |       |
+| Requirement | Status  | Notes |
+|-------------|---------|-------|
+| REQ-RT-01   | pending |       |
+| REQ-RT-02   | pending |       |
+| REQ-RT-03   | pending |       |
+| REQ-RT-04   | pending |       |
+| REQ-RT-10   | pending |       |

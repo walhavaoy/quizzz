@@ -1,23 +1,23 @@
 ---
 area: infrastructure
 status: planned
-created: 2026-05-07
+created: 2026-05-08
 ---
 
 # Infrastructure — Area Overview
 
-> Docker containerization and Helm chart for Kubernetes deployment.
+> Docker container and Helm chart for Kubernetes deployment.
 
 ## Components
 
-| Component  | Priority | Description                                     |
-|-----------|----------|-------------------------------------------------|
-| helm-chart| P1       | Helm chart with ingress at quizzz.tmpclaw.io     |
-| docker    | P1       | Multi-stage Dockerfile for Node.js 22 app        |
+| Component  | Priority | Description                                        |
+|------------|----------|----------------------------------------------------|
+| docker     | P1       | Multi-stage Dockerfile, non-root user              |
+| helm-chart | P1       | Helm chart deployed at quiz-loop-1.tmpclaw.io      |
 
-## Key Decisions
+## Notes
 
-- Single container running Express + WebSocket on port 8080.
-- Helm chart exposes ingress at quizzz.tmpclaw.io.
-- Shell access at shell.quizzz.tmpclaw.io for debugging.
-- WebSocket connections require sticky sessions or single-replica deployment.
+- Standard tmpclaw Helm chart pattern
+- Ingress at quiz-loop-1.tmpclaw.io
+- Health probes at /healthz and /readyz
+- No WebSocket annotations needed (pure HTTP)

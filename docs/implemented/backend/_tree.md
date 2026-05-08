@@ -1,14 +1,12 @@
 ---
 area: backend
 coverage: 0%
-created: 2026-05-07
+created: 2026-05-08
 ---
 
 # Backend — Implementation Status
 
-| Component    | Coverage | Notes |
-|-------------|----------|-------|
-| server      | 0%       |       |
-| rest-api    | 0%       |       |
-| websocket   | 0%       |       |
-| game-engine | 0%       |       |
+| Component | Coverage | Status  |
+|-----------|----------|---------|
+| server    | 0%       | pending |
+| rest-api  | 0%       | pending |

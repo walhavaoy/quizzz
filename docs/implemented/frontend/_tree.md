@@ -1,16 +1,15 @@
 ---
 area: frontend
 coverage: 0%
-created: 2026-05-07
+created: 2026-05-08
 ---
 
 # Frontend — Implementation Status
 
-| Component        | Coverage | Notes |
-|-----------------|----------|-------|
-| lobby           | 0%       |       |
-| play            | 0%       |       |
-| result          | 0%       |       |
-| router          | 0%       |       |
-| websocket-client| 0%       |       |
-| styles          | 0%       |       |
+| Component | Coverage | Status  |
+|-----------|----------|---------|
+| home      | 0%       | pending |
+| quiz      | 0%       | pending |
+| result    | 0%       | pending |
+| router    | 0%       | pending |
+| styles    | 0%       | pending |

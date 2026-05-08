@@ -3,36 +3,54 @@ component: types
 area: data
 priority: P0
 status: planned
-created: 2026-05-07
+created: 2026-05-08
 ---
 
-# Types
+# Shared Types
 
-> Shared TypeScript type definitions for the entire application.
+> TypeScript interfaces shared between server and client code.
 
 ## Purpose
 
-Define TypeScript interfaces and types used across backend and frontend: question shape, game state, player state, WebSocket message envelopes, and API request/response types.
+Single source of truth for data shapes used across API responses and frontend state.
 
 ## Requirements
 
 ### Core
-- REQ-TY-01: Question interface (id, text, options, correctIndex) [priority: must]
-- REQ-TY-02: Player interface (id, nickname, score, currentAnswer) [priority: must]
-- REQ-TY-03: GameState interface (id, status, players, currentRound, questions) [priority: must]
-- REQ-TY-04: WebSocket message types — discriminated union by event type [priority: must]
-- REQ-TY-05: API request/response types for all REST endpoints [priority: must]
-- REQ-TY-06: Game status enum: lobby, playing, reveal, finished [priority: must]
+- REQ-TY-01: Category interface with id, name, description [priority: must]
+- REQ-TY-02: Question interface with question, options (string[4]), correct_index [priority: must]
+- REQ-TY-03: QuizState interface for client-side state management [priority: must]
+- REQ-TY-04: No `any` types — strict TypeScript mode [priority: must]
 
-### Extended
-- REQ-TY-10: Strict typing — no `any` types [priority: should]
+## Key Interfaces
+
+```typescript
+interface Category {
+  id: string;
+  name: string;
+  description: string;
+}
+
+interface Question {
+  question: string;
+  options: string[];
+  correct_index: number;
+}
+
+interface QuizState {
+  category: string;
+  questions: Question[];
+  currentIndex: number;
+  answers: (number | null)[];
+  score: number;
+}
+```
 
 ## Acceptance Criteria
 
-- All types compile without errors
-- Types are importable from both backend and frontend code
-- WebSocket messages are fully typed with discriminated unions
+- All interfaces compile under strict TypeScript
+- Types are importable by both server and client code
 
 ## Dependencies
 
-None — leaf component.
+None (leaf type definitions)

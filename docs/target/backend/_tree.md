@@ -1,25 +1,22 @@
 ---
 area: backend
 status: planned
-created: 2026-05-07
+created: 2026-05-08
 ---
 
 # Backend — Area Overview
 
-> Node.js + Express server with WebSocket support, REST API, and in-memory game engine.
+> Express HTTP server serving REST API endpoints and static frontend files.
 
 ## Components
 
-| Component    | Priority | Description                                          |
-|-------------|----------|------------------------------------------------------|
-| server      | P0       | Express app bootstrap, static file serving, port 8080 |
-| rest-api    | P0       | REST endpoints: questions, game CRUD, join, answer    |
-| websocket   | P0       | WebSocket upgrade and event broadcasting              |
-| game-engine | P0       | Game state machine, timer logic, scoring              |
+| Component | Priority | Description                                      |
+|-----------|----------|--------------------------------------------------|
+| server    | P0       | Express entry point, health/ready checks, static serving |
+| rest-api  | P0       | GET /api/categories and GET /api/quiz endpoints  |
 
-## Key Decisions
+## Notes
 
-- All game state is in-memory (no database). Single-process model.
-- WebSocket uses the `ws` library, upgraded from the Express HTTP server.
-- REST API is used for discrete actions (create game, join, answer); WebSocket pushes state changes.
-- Timer is server-authoritative (15s countdown managed server-side).
+- No WebSocket needed — this is a single-player, stateless quiz
+- All quiz state lives client-side; server just serves questions
+- Health and readiness probes at /healthz and /readyz

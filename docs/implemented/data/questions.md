@@ -2,14 +2,16 @@
 component: questions
 area: data
 coverage: 0%
-created: 2026-05-07
+created: 2026-05-08
 ---
 
-# Questions — Implementation Status
+# Question Pool — Implementation Status
 
-| Requirement | Status | Notes |
-|-------------|--------|-------|
-| REQ-QS-01   |        |       |
-| REQ-QS-02   |        |       |
-| REQ-QS-03   |        |       |
-| REQ-QS-04   |        |       |
+| Requirement | Status  | Notes |
+|-------------|---------|-------|
+| REQ-QS-01   | pending |       |
+| REQ-QS-02   | pending |       |
+| REQ-QS-03   | pending |       |
+| REQ-QS-04   | pending |       |
+| REQ-QS-05   | pending |       |
+| REQ-QS-06   | pending |       |

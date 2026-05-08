@@ -1,12 +1,12 @@
 ---
 area: data
 coverage: 0%
-created: 2026-05-07
+created: 2026-05-08
 ---
 
 # Data — Implementation Status
 
-| Component | Coverage | Notes |
-|-----------|----------|-------|
-| questions | 0%       |       |
-| types     | 0%       |       |
+| Component  | Coverage | Status  |
+|------------|----------|---------|
+| questions  | 0%       | pending |
+| types      | 0%       | pending |

@@ -1,27 +1,26 @@
 ---
 area: frontend
 status: planned
-created: 2026-05-07
+created: 2026-05-08
 ---
 
 # Frontend — Area Overview
 
-> Vanilla TypeScript SPA with CSS, served as static assets from public/.
+> Vanilla TypeScript single-page application with hash-based routing.
 
 ## Components
 
-| Component        | Priority | Description                                    |
-|-----------------|----------|------------------------------------------------|
-| lobby           | P0       | Nickname entry, live player list, start button  |
-| play            | P0       | Question display, 4-choice answers, 15s timer   |
-| result          | P0       | Podium top-3 + full ranked list, play again     |
-| router          | P1       | SPA view switching by route (/, /play, /result) |
-| websocket-client| P0       | WebSocket wrapper for receiving game events      |
-| styles          | P1       | Global CSS with playful dark theme palette       |
+| Component | Priority | Description                                        |
+|-----------|----------|----------------------------------------------------|
+| home      | P0       | Category selection page with 3 category cards      |
+| quiz      | P0       | Question display with 4 answer buttons             |
+| result    | P0       | Final score, per-question breakdown, play again     |
+| router    | P1       | Hash-based client-side SPA router                  |
+| styles    | P1       | Bright, friendly CSS theme, mobile-responsive      |
 
-## Key Decisions
+## Notes
 
-- No framework — vanilla TypeScript compiled to JS, served from public/.
-- Single HTML file with views toggled by a simple client-side router.
-- All interactive elements have `data-testid="quizzz-{element}-{identifier}"` attributes.
-- Mobile-responsive layout (360px minimum width).
+- No framework — vanilla TypeScript compiled to ES2020
+- Hash-based routing (#/, #/quiz, #/result)
+- All quiz state managed client-side in memory
+- All interactive elements have data-testid attributes for Playwright

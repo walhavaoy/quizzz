@@ -3,36 +3,42 @@ component: router
 area: frontend
 priority: P1
 status: planned
-created: 2026-05-07
+created: 2026-05-08
 ---
 
-# Client-Side Router
+# Hash Router
 
-> Simple SPA view switching without page reloads.
+> Hash-based client-side SPA router for navigating between views.
 
 ## Purpose
 
-Implement a lightweight client-side router that swaps visible views (lobby, play, result) based on the current route. Uses hash-based routing for simplicity.
+Manages view transitions using URL hash fragments. Three routes: home (#/ or #), quiz (#/quiz), result (#/result).
 
 ## Requirements
 
 ### Core
-- REQ-RT-01: Route `/` shows lobby view [priority: must]
-- REQ-RT-02: Route `/play` shows play view [priority: must]
-- REQ-RT-03: Route `/result` shows result view [priority: must]
-- REQ-RT-04: Programmatic navigation (navigate function) for WebSocket-triggered transitions [priority: must]
-- REQ-RT-05: Hide inactive views, show active view [priority: must]
+- REQ-RT-01: Hash-based routing with #/, #/quiz, #/result [priority: must]
+- REQ-RT-02: Show only the active view, hide others [priority: must]
+- REQ-RT-03: navigate() function for programmatic route changes [priority: must]
+- REQ-RT-04: Listen to hashchange event for browser back/forward [priority: must]
 
 ### Extended
-- REQ-RT-10: Browser back/forward button support [priority: could]
+- REQ-RT-10: View transition animations [priority: could]
+
+## Routes
+
+| Hash      | View   | Description            |
+|-----------|--------|------------------------|
+| `#/`      | home   | Category selection     |
+| `#/quiz`  | quiz   | Active quiz question   |
+| `#/result`| result | Score and breakdown    |
 
 ## Acceptance Criteria
 
-- Loading `/` renders lobby view
-- `navigate('/play')` hides lobby, shows play view
-- `navigate('/result')` hides play, shows result view
-- Only one view visible at any time
+- Navigating between views shows correct content
+- Browser back/forward works with hash routes
+- Only one view is visible at a time
 
 ## Dependencies
 
-None — leaf component.
+None (standalone utility)

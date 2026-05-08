@@ -3,41 +3,44 @@ component: styles
 area: frontend
 priority: P1
 status: planned
-created: 2026-05-07
+created: 2026-05-08
 ---
 
 # Styles
 
-> Global CSS with a bright playful dark theme.
+> Bright, friendly CSS theme with mobile-responsive layout.
 
 ## Purpose
 
-Define the visual design system: color palette, typography, layout utilities, and component styles. Playful aesthetic with purple/teal/yellow accents on a dark background.
+Global CSS providing the visual identity. Bright and friendly (not dark theme). Responsive down to 360px.
 
 ## Requirements
 
 ### Core
-- REQ-ST-01: Dark background theme (#1a1a2e or similar dark base) [priority: must]
-- REQ-ST-02: Purple primary accent (#7c3aed or similar) [priority: must]
-- REQ-ST-03: Teal secondary accent (#14b8a6 or similar) [priority: must]
-- REQ-ST-04: Yellow highlight accent (#facc15 or similar) [priority: must]
-- REQ-ST-05: Mobile-responsive layout, works at 360px width [priority: must]
-- REQ-ST-06: Readable typography with good contrast on dark bg [priority: must]
-- REQ-ST-07: Button styles for primary actions and answer choices [priority: must]
-- REQ-ST-08: Timer visual styling (prominent countdown) [priority: must]
-- REQ-ST-09: Podium styling for top-3 display [priority: must]
+- REQ-ST-01: Bright, friendly color palette [priority: must]
+- REQ-ST-02: Mobile-responsive layout, minimum 360px width [priority: must]
+- REQ-ST-03: No CSS framework — plain CSS with custom properties [priority: must]
+- REQ-ST-04: Category cards with hover effects [priority: must]
+- REQ-ST-05: Answer button states: default, selected-correct, selected-wrong, revealed-correct [priority: must]
 
 ### Extended
-- REQ-ST-10: Subtle animations for transitions and feedback [priority: should]
-- REQ-ST-11: Loading/waiting state indicators [priority: could]
+- REQ-ST-10: Smooth view transitions [priority: should]
+- REQ-ST-11: Score display styling with emphasis [priority: should]
+
+## Color Palette (suggested)
+
+- Background: light/white (#f8f9fa or similar)
+- Primary accent: vibrant blue or purple
+- Correct: green (#22c55e)
+- Incorrect: red (#ef4444)
+- Cards: white with subtle shadow
 
 ## Acceptance Criteria
 
-- All pages render correctly at 360px viewport width
-- Color palette matches spec (purple/teal/yellow on dark)
-- Text has sufficient contrast ratio (WCAG AA)
-- Buttons are large enough for touch targets (min 44px)
+- App renders correctly at 360px viewport width
+- Answer buttons show clear visual feedback for correct/incorrect
+- No horizontal scrolling on mobile
 
 ## Dependencies
 
-None — leaf component.
+None (standalone CSS)

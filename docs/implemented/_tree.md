@@ -1,25 +1,26 @@
 ---
-project: quizzz
-status: not-started
+project: quiz-loop-1
+status: in-progress
 coverage: 0%
-created: 2026-05-07
+created: 2026-05-08
 ---
 
-# quizzz — Implementation Status
+# quiz-loop-1 — Implementation Tracking
 
-| Area           | Component         | Coverage |
-|----------------|-------------------|----------|
-| backend        | server            | 0%       |
-| backend        | rest-api          | 0%       |
-| backend        | websocket         | 0%       |
-| backend        | game-engine       | 0%       |
-| data           | questions         | 0%       |
-| data           | types             | 0%       |
-| frontend       | lobby             | 0%       |
-| frontend       | play              | 0%       |
-| frontend       | result            | 0%       |
-| frontend       | router            | 0%       |
-| frontend       | websocket-client  | 0%       |
-| frontend       | styles            | 0%       |
-| infrastructure | helm-chart        | 0%       |
-| infrastructure | docker            | 0%       |
+> Tracks implementation progress against target specifications.
+
+## Areas & Components
+
+| Area           | Component    | Coverage | Status  |
+|----------------|-------------|----------|---------|
+| backend        | server      | 0%       | pending |
+| backend        | rest-api    | 0%       | pending |
+| data           | questions   | 0%       | pending |
+| data           | types       | 0%       | pending |
+| frontend       | home        | 0%       | pending |
+| frontend       | quiz        | 0%       | pending |
+| frontend       | result      | 0%       | pending |
+| frontend       | router      | 0%       | pending |
+| frontend       | styles      | 0%       | pending |
+| infrastructure | docker      | 0%       | pending |
+| infrastructure | helm-chart  | 0%       | pending |

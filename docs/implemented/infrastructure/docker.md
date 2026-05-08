@@ -2,17 +2,17 @@
 component: docker
 area: infrastructure
 coverage: 0%
-created: 2026-05-07
+created: 2026-05-08
 ---
 
-# Docker — Implementation Status
+# Dockerfile — Implementation Status
 
-| Requirement | Status | Notes |
-|-------------|--------|-------|
-| REQ-DK-01   |        |       |
-| REQ-DK-02   |        |       |
-| REQ-DK-03   |        |       |
-| REQ-DK-04   |        |       |
-| REQ-DK-05   |        |       |
-| REQ-DK-06   |        |       |
-| REQ-DK-07   |        |       |
+| Requirement | Status  | Notes |
+|-------------|---------|-------|
+| REQ-DK-01   | pending |       |
+| REQ-DK-02   | pending |       |
+| REQ-DK-03   | pending |       |
+| REQ-DK-04   | pending |       |
+| REQ-DK-05   | pending |       |
+| REQ-DK-06   | pending |       |
+| REQ-DK-10   | pending |       |

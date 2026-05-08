@@ -1,12 +1,12 @@
 ---
 area: infrastructure
 coverage: 0%
-created: 2026-05-07
+created: 2026-05-08
 ---
 
 # Infrastructure — Implementation Status
 
-| Component  | Coverage | Notes |
-|-----------|----------|-------|
-| helm-chart| 0%       |       |
-| docker    | 0%       |       |
+| Component  | Coverage | Status  |
+|------------|----------|---------|
+| docker     | 0%       | pending |
+| helm-chart | 0%       | pending |
